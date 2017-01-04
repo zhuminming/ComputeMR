@@ -1,9 +1,11 @@
 package HadoopDemo.mr.common;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -18,12 +20,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * 创建日期：2016-12-21
  */
 public class MapReduce {
-	private String                               jarname;
-	private Class<?>                             jarByClass;
-	private Class<? extends Mapper<?, ?, ?, ?>>  mapperClass;
-	private Class<?>                             outputKeyClass;
-	private Class<?>                             outputValuesClass;
-	private Class<? extends Partitioner<?, ?>>   partitionerClass;
+	private boolean                              isLocal;              //是否是本地执行
+	private String                               jarname;              //设置jar名称
+	private Class<?>                             jarByClass;           //设置类名
+	private Class<? extends Mapper<?, ?, ?, ?>>  mapperClass;          //设置map类名
+	private Class<?>                             outputKeyClass;       //设置map操作key输出类型
+	private Class<?>                             outputValuesClass;    //设置map操作value输出类型
+	private Class<? extends Partitioner<?, ?>>   partitionerClass;     //partitioner类名
 	private Class<? extends Reducer<?, ?, ?, ?>> combinerClass;
 	private Class<? extends Reducer<?, ?, ?, ?>> reducerClass;
 	private Integer                              numReduceTasks;
@@ -77,6 +80,18 @@ public class MapReduce {
 	}
 	
 	public void setInputPath(Job job,String pathString){
-		
+		boolean hasInput = false;
+		if(this.isLocal){
+			for (String pathStr:this.inputPath.split(CommonUtil.M_DOUHAO_SPLIT)){
+				if(new File(pathStr).exists()){
+					Path path = new Path(pathStr);
+//					FileInputFormat.addInputPath(job,path);
+//					hasInput = true;
+
+				}
+
+			}
+
+		}
 	}
 }
