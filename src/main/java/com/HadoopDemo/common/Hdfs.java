@@ -1,4 +1,4 @@
-package HadoopDemo.mr.common;
+package com.HadoopDemo.common;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;

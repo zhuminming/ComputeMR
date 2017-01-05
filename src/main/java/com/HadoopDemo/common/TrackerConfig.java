@@ -1,4 +1,4 @@
-package HadoopDemo.mr.common;
+package com.HadoopDemo.common;
 
 import java.io.File;
 import java.io.IOException;

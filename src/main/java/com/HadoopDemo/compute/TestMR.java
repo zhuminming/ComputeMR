@@ -1,4 +1,4 @@
-package HadoopDemo.mr.compute;
+package com.HadoopDemo.compute;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;

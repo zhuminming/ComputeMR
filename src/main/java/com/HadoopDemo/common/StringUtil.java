@@ -1,4 +1,4 @@
-package HadoopDemo.mr.common;
+package com.HadoopDemo.common;
 
 /**
  * Created by minming.zhu on 2017/1/5.
