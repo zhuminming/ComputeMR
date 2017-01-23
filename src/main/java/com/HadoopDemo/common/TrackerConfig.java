@@ -8,12 +8,25 @@ import java.util.Properties;
  * Created by minming.zhu on 2017/1/5.
  */
 public class TrackerConfig  implements Serializable {
+
+    /**
+     * mapreduce配置
+     */
+    private long  mrInputSplitSize;     //mapreduce中map输入分片的最大大小(单位：byte)
+    private int   mrMaxMapNum;          //mapreduce中map的最大个数
+    private float mrMapReduceNumRate;   //mapreduce中map个数与reduce个数的比值
+
+
     public TrackerConfig(String filepath){
         InputStream input = null;
         try{
             DefProperties properties = new DefProperties();
             input = new FileInputStream(filepath);
             properties.load(input);  //从输入流中读取属性列表（键 和 值）
+
+            this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //默认2G
+            this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //默认8个map
+            this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //默认0.3
         }catch(Exception e){
         }
 
@@ -96,7 +109,30 @@ public class TrackerConfig  implements Serializable {
             }
         }
 
+    }
 
+    public long getMrInputSplitSize() {
+        return mrInputSplitSize;
+    }
+
+    public void setMrInputSplitSize(long mrInputSplitSize) {
+        this.mrInputSplitSize = mrInputSplitSize;
+    }
+
+    public int getMrMaxMapNum() {
+        return mrMaxMapNum;
+    }
+
+    public void setMrMaxMapNum(int mrMaxMapNum) {
+        this.mrMaxMapNum = mrMaxMapNum;
+    }
+
+    public float getMrMapReduceNumRate() {
+        return mrMapReduceNumRate;
+    }
+
+    public void setMrMapReduceNumRate(float mrMapReduceNumRate) {
+        this.mrMapReduceNumRate = mrMapReduceNumRate;
     }
 
 }

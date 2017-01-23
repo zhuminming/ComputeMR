@@ -22,6 +22,7 @@ import org.wjw.efjson.JsonObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.NavigableMap;
@@ -277,7 +278,7 @@ public class SolrIndexCoprocessorObserver extends BaseRegionObserver {
                 }
                 _stateArray = stateArray;
 
-                java.util.List<String> newUrlUpdates = new java.util.ArrayList<String>(stateArray.size());
+                List<String> newUrlUpdates = new ArrayList<String>(stateArray.size());
                 for (int i = 0; i < stateArray.size(); i++) {
                     JsonObject jj = stateArray.<JsonObject> get(i);
                     if (jj.getString("state").equalsIgnoreCase("active") || jj.getString("state").equalsIgnoreCase("recovering")) {

@@ -4,8 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.HadoopDemo.file.CombineSmallFileInputFormat;
+import com.HadoopDemo.file.HBaseTableInputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.mapreduce.TableMapper;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -28,6 +34,7 @@ import org.slf4j.LoggerFactory;
 	private String                               jarname;                   //设置jar名称
 	private Class<?>                             jarByClass;                //设置mapreduce所在的类名
 	private Class<? extends Mapper<?, ?, ?, ?>>  mapperClass;               //设置map类名
+	private Class<? extends  TableMapper<?,?>>   tableMapperClass;           //设置map类名
 	private Class<?>                             outputKeyClass;            //设置map输出key值类型
 	private Class<?>                             outputValuesClass;         //设置map输出value值类型
 	private Class<? extends Partitioner<?, ?>>   partitionerClass;          //设置partitioner类名
@@ -38,7 +45,8 @@ import org.slf4j.LoggerFactory;
 	private String                               outputPath;                //设置Mapreduce输出路径
 	private Class<? extends InputFormat<?, ?>>   inputFormatClass;          //设置Mapreduce输入文件的切分规则
 	private Configuration                        config;
-	private TrackerConfig                        trackerConfig;
+	private TrackerConfig                        trackerConfig;             //自定义配置文件
+	private static Scan                          scan;                      //设置scan
 
 
 	/**
@@ -55,9 +63,7 @@ import org.slf4j.LoggerFactory;
 					 Class<? extends Reducer<?, ?, ?, ?>> reducerClass,
 					 Integer numReduceTasks,
 					 String inputPath,
-					 String outputPath,
-					 Class<? extends InputFormat<?, ?>> inputFormatClass,
-					 Configuration config) throws IOException {
+					 String outputPath) throws IOException {
 		this.isLocal = isLocal;
 		this.jarname = jarname;
 		this.jarByClass = jarByClass;
@@ -70,12 +76,62 @@ import org.slf4j.LoggerFactory;
 		this.numReduceTasks=numReduceTasks;
 		this.inputPath=inputPath;
 		this.outputPath=outputPath;
-		this.inputFormatClass=inputFormatClass;
-		this.config = config;
+		this.inputFormatClass=CombineSmallFileInputFormat.class;
+		this.config = new Configuration();
 		this.trackerConfig = TrackerConfig.getInstance();
 		
 	}
 
+	/**
+	 * 功能MapReduce构造函数
+	 * @throws IOException
+	 */
+	private MapReduce(boolean isLocal,String jarname,
+					 Class<?> jarByClass,
+					 Class<? extends TableMapper<?, ?>> tableMapperClass,
+					 Class<?> outputKeyClass,
+					 Class<?> outputValuesClass,
+					 Class<? extends Partitioner<?, ?>> partitionerClass,
+					 Class<? extends Reducer<?, ?, ?, ?>> combinerClass,
+					 Class<? extends Reducer<?, ?, ?, ?>> reducerClass,
+					 Integer numReduceTasks,
+					 String outputPath,
+					  Scan scan) throws IOException {
+		this.isLocal = isLocal;
+		this.jarname = jarname;
+		this.jarByClass = jarByClass;
+		this.tableMapperClass= tableMapperClass;
+		this.outputKeyClass=outputKeyClass;
+		this.outputValuesClass=outputValuesClass;
+		this.partitionerClass=partitionerClass;
+		this.combinerClass=combinerClass;
+		this.reducerClass=reducerClass;
+		this.numReduceTasks=numReduceTasks;
+		this.outputPath=outputPath;
+		this.inputFormatClass=CombineSmallFileInputFormat.class;
+		this.config = new Configuration();
+		this.trackerConfig = TrackerConfig.getInstance();
+		this.scan = scan;
+
+	}
+	/**
+	 * 功能:获取读取hbase的Mapreduce
+	 * @throws IOException
+	 */
+	public static MapReduce getMapReduce(boolean isLocal,String jarname,
+								  Class<?> jarByClass,
+								  Class<? extends TableMapper<?, ?>> tableMapperClass,
+								  Class<?> outputKeyClass,
+								  Class<?> outputValuesClass,
+								  Class<? extends Partitioner<?, ?>> partitionerClass,
+								  Class<? extends Reducer<?, ?, ?, ?>> combinerClass,
+								  Class<? extends Reducer<?, ?, ?, ?>> reducerClass,
+								  Integer numReduceTasks,
+								  String outputPath,
+	                              Scan scan)throws IOException{
+
+		return new MapReduce(isLocal,jarname,jarByClass,tableMapperClass,outputKeyClass,outputValuesClass,partitionerClass,combinerClass,reducerClass,numReduceTasks,outputPath,scan);
+	}
 
 	/**
 	 * 功能：启动job对象
@@ -83,8 +139,11 @@ import org.slf4j.LoggerFactory;
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public boolean waitForCompletion(boolean verbose) throws ClassNotFoundException, IOException, InterruptedException{
-		return getJob().waitForCompletion(verbose);
+	public boolean waitForCompletion() throws ClassNotFoundException, IOException, InterruptedException{
+		if(scan!=null){
+			return buildMapReduceJob().waitForCompletion(true);
+		}
+		return getJob().waitForCompletion(true);
 	}
 
 
@@ -129,6 +188,53 @@ import org.slf4j.LoggerFactory;
 	        return job;			
 	}
 
+	/**
+	 * 功能：获取处理Hbase的JOB对象
+	 * @throws IOException
+	 */
+	public Job buildMapReduceJob() throws IOException{
+		Job job = Job.getInstance();
+		//设置MR名称
+		job.setJar(this.jarname);
+		//设置mapreduce所在的类名
+		job.setJarByClass(this.jarByClass);
+		//map类型
+		job.setMapperClass(this.mapperClass);
+		//map输出key值类型
+		job.setOutputKeyClass(this.outputKeyClass);
+		//map输出value值类型
+		job.setOutputValueClass(this.outputValuesClass);
+		//partitioner类名
+		if(this.partitionerClass!=null){
+			job.setPartitionerClass(this.partitionerClass);
+		}
+		//combiner类名
+		if(this.combinerClass!=null){
+			job.setCombinerClass(this.combinerClass);
+		}
+		//reducer类名
+		if(this.reducerClass!=null){
+			job.setReducerClass(this.reducerClass);
+			if(this.numReduceTasks!=null){
+				job.setNumReduceTasks(this.numReduceTasks);
+			}
+		}
+
+		//mapreduce输出
+		FileOutputFormat.setOutputPath(job, new Path(this.outputPath));
+
+		TableMapReduceUtil.initTableMapperJob(
+				Bytes.toString(scan.getAttribute(Scan.SCAN_ATTRIBUTES_TABLE_NAME)),
+				scan,
+				this.tableMapperClass,
+				this.outputKeyClass,
+				this.outputValuesClass,
+				job,
+				true,
+				HBaseTableInputFormat.class);
+
+		return job;
+	}
 
 	/**
 	 * 功能：设置mapreduce输入路径
@@ -169,7 +275,6 @@ import org.slf4j.LoggerFactory;
 			if (!hasInput) {
 				throw new IOException("Set input path failed !");
 			}
-
 		}
 	}
 }
