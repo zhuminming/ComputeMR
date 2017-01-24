@@ -2,7 +2,7 @@ package com.HadoopDemo.compute;
 
 import com.HadoopDemo.common.MapReduce;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -32,7 +32,7 @@ public class SolrHBaseIndexer{
 
             Configuration conf = context.getConfiguration();
 
-            HttpSolrServer solrServer = new HttpSolrServer(conf.get("solr.server"));
+            HttpSolrServer solrServer = new HttpSolrServer("http://192.168.21.130:8983/solr");
             solrServer.setDefaultMaxConnectionsPerHost(100);
             solrServer.setMaxTotalConnections(1000);
             solrServer.setSoTimeout(20000);
@@ -40,17 +40,16 @@ public class SolrHBaseIndexer{
             SolrInputDocument solrDoc = new SolrInputDocument();
             try {
                 solrDoc.addField("rowkey", new String(result.getRow()));
-                for (KeyValue rowQualifierAndValue : result.list()) {
-                    String fieldName = Bytes.toString(rowQualifierAndValue.getQualifierArray(), rowQualifierAndValue.getQualifierOffset(), rowQualifierAndValue.getQualifierLength());
-                    String fieldValue = Bytes.toString(rowQualifierAndValue.getValueArray(), rowQualifierAndValue.getValueOffset(), rowQualifierAndValue.getValueLength());
-                    if (fieldName.equalsIgnoreCase("time")
-                            || fieldName.equalsIgnoreCase("tebid")
-                            || fieldName.equalsIgnoreCase("tetid")
-                            || fieldName.equalsIgnoreCase("puid")
-                            || fieldName.equalsIgnoreCase("mgcvid")
-                            || fieldName.equalsIgnoreCase("mtcvid")
-                            || fieldName.equalsIgnoreCase("smaid")
-                            || fieldName.equalsIgnoreCase("mtlkid")) {
+                for (Cell cell : result.listCells()) {
+                    String fieldName = Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength());
+                    String fieldValue = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
+                    if (fieldName.equalsIgnoreCase("searchCount")
+                            || fieldName.equalsIgnoreCase("totalSearchCost")
+                            || fieldName.equalsIgnoreCase("maxSearchCost")
+                            || fieldName.equalsIgnoreCase("pageTurningCount")
+                            || fieldName.equalsIgnoreCase("mainPageCount")
+                            || fieldName.equalsIgnoreCase("cookieId_bitmap")
+                            || fieldName.equalsIgnoreCase("userId_bitmap")) {
                         solrDoc.addField(fieldName, fieldValue);
                     }
                 }

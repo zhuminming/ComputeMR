@@ -25,7 +25,7 @@ import java.util.NavigableMap;
  */
 public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
     private  static final Logger LOG = LoggerFactory.getLogger(TestSolrIndexCoprocessorObserver.class);
-    private  static final String solrUrl = "http://192.168.21.130:8080/solr";
+    private  static final String solrUrl = "http://192.168.21.130:8080/solr/collection1";
     private static final SolrServer solrServer = new ConcurrentUpdateSolrServer(solrUrl,10000,20);
 
 
@@ -47,6 +47,7 @@ public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
         }else{
             try{
                 solrServer.add(doc);
+                solrServer.commit(true,true,true);
             } catch (SolrServerException ex) {
                 ex.printStackTrace();
                 LOG.error("solr server exception :"+ex.getMessage());
@@ -59,14 +60,12 @@ public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
 
         SolrInputDocument doc = new SolrInputDocument();
         String rowkey = Bytes.toString(put.getRow());
-        doc.addField("test_id",rowkey);
-        String cFamily = null;
+        doc.addField("rowkey",rowkey);
         String cQualifiter = null;
         String cValue = null;
         NavigableMap<byte [], List<Cell>> map =  put.getFamilyCellMap();
         for(List<Cell> cells : map.values()){
             for(Cell cell : cells){
-                cFamily = Bytes.toString(cell.getFamilyArray(),cell.getFamilyLength(),cell.getFamilyOffset());
                 cQualifiter = Bytes.toString(cell.getQualifierArray(),cell.getQualifierLength(),cell.getQualifierOffset());
                 cValue = Bytes.toString(cell.getValueArray(),cell.getValueLength(),cell.getValueOffset());
 
@@ -75,6 +74,4 @@ public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
         }
         return doc;
     }
-
-
 }
