@@ -10,11 +10,19 @@ import java.util.Properties;
 public class TrackerConfig  implements Serializable {
 
     /**
-     * mapreduceé…ç½®
+     * mapreduceÅäÖÃ
      */
-    private long  mrInputSplitSize;     //mapreduceä¸­mapè¾“å…¥åˆ†ç‰‡çš„æœ€å¤§å¤§å°(å•ä½ï¼šbyte)
-    private int   mrMaxMapNum;          //mapreduceä¸­mapçš„æœ€å¤§ä¸ªæ•°
-    private float mrMapReduceNumRate;   //mapreduceä¸­mapä¸ªæ•°ä¸reduceä¸ªæ•°çš„æ¯”å€¼
+    private long  mrInputSplitSize;     //mapreduceÖĞmapÊäÈë·ÖÆ¬µÄ×î´ó´óĞ¡(µ¥Î»£ºbyte)
+    private int   mrMaxMapNum;          //mapreduceÖĞmapµÄ×î´ó¸öÊı
+    private float mrMapReduceNumRate;   //mapreduceÖĞmap¸öÊıÓëreduce¸öÊıµÄ±ÈÖµ
+
+
+    /**
+     * hbaseÅäÖÃ
+     */
+    private  int hbaseHConnectionNum;  //hbase hconnectionÁ¬½ÓÊı
+    private  String zookeeper;         //zookeeperµØÖ·
+    private  int poolSize;             //hbaseÏß³Ì³Ø´óĞ¡
 
 
     public TrackerConfig(String filepath){
@@ -22,12 +30,17 @@ public class TrackerConfig  implements Serializable {
         try{
             DefProperties properties = new DefProperties();
             input = new FileInputStream(filepath);
-            properties.load(input);  //ä»è¾“å…¥æµä¸­è¯»å–å±æ€§åˆ—è¡¨ï¼ˆé”® å’Œ å€¼ï¼‰
+            properties.load(input);  //´ÓÊäÈëÁ÷ÖĞ¶ÁÈ¡ÊôĞÔÁĞ±í£¨¼ü ºÍ Öµ£©
 
-            this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //é»˜è®¤2G
-            this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //é»˜è®¤8ä¸ªmap
-            this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //é»˜è®¤0.3
+            this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //Ä¬ÈÏ2G
+            this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //Ä¬ÈÏ8¸ömap
+            this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //Ä¬ÈÏ0.3
+
+            this.zookeeper = properties.getString("hbase.zookeeper.quorum");
+            this.poolSize = properties.getInt("hbase.pool.size", 15);	//hbaseÏß³Ì³Ø´óĞ¡Ä¬ÈÏÎª15
+            this.hbaseHConnectionNum = properties.getInt("hbase.hconnection.num", 1);
         }catch(Exception e){
+            e.printStackTrace();
         }
 
 
@@ -35,7 +48,7 @@ public class TrackerConfig  implements Serializable {
     }
 
     /**
-     * åŠŸèƒ½ï¼šåˆå§‹åŒ–TrackerConfig
+     * ¹¦ÄÜ£º³õÊ¼»¯TrackerConfig
      * @throws IOException
      */
     public static TrackerConfig getInstance() throws IOException {
@@ -45,14 +58,14 @@ public class TrackerConfig  implements Serializable {
             int index = thisDirPath.indexOf(StringUtil.SIGN_CONFIG);
             return new TrackerConfig(thisDirPath.substring(0,index+StringUtil.SIGN_CONFIG.length())+"/conf/config.properties");
         }else{
-            return new TrackerConfig("");
+            return new TrackerConfig("../ComputeMR/src/main/java/com/conf/config.properties");
         }
     }
 
 
     /**
-     * åŠŸèƒ½ï¼šè‡ªå®šä¹‰åŠ è½½é…ç½®æ–‡ä»¶å¯¹è±¡
-     * @extends Properties    å®ç°æŒä¹…åŒ–å±æ€§é›†çš„ç±»
+     * ¹¦ÄÜ£º×Ô¶¨Òå¼ÓÔØÅäÖÃÎÄ¼ş¶ÔÏó
+     * @extends Properties    ÊµÏÖ³Ö¾Ã»¯ÊôĞÔ¼¯µÄÀà
      */
     private static  class DefProperties extends Properties{
 
@@ -133,6 +146,30 @@ public class TrackerConfig  implements Serializable {
 
     public void setMrMapReduceNumRate(float mrMapReduceNumRate) {
         this.mrMapReduceNumRate = mrMapReduceNumRate;
+    }
+
+    public  int getHbaseHConnectionNum() {
+        return hbaseHConnectionNum;
+    }
+
+    public  void setHbaseHConnectionNum(int hbaseHConnectionNum) {
+        this.hbaseHConnectionNum = hbaseHConnectionNum;
+    }
+
+    public  String getZookeeper() {
+        return zookeeper;
+    }
+
+    public  void setZookeeper(String zookeeper) {
+        this.zookeeper = zookeeper;
+    }
+
+    public  int getPoolSize() {
+        return poolSize;
+    }
+
+    public  void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
 
 }

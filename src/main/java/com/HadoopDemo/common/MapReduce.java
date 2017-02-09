@@ -77,8 +77,11 @@ import org.slf4j.LoggerFactory;
 		this.inputPath=inputPath;
 		this.outputPath=outputPath;
 		this.inputFormatClass=CombineSmallFileInputFormat.class;
-		this.config = new Configuration();
 		this.trackerConfig = TrackerConfig.getInstance();
+		this.config = new Configuration();
+		this.config.set("hbase.zookeeper.quorum", "10.100.2.92,10.100.2.93,10.100.2.94");
+		this.config.set(Constant.TRACKER_CONFIG, SerializeUtil.serialize(this.trackerConfig));
+		this.config.set("hdfs.address", "hdfs://mycluster");
 		
 	}
 
@@ -109,8 +112,11 @@ import org.slf4j.LoggerFactory;
 		this.numReduceTasks=numReduceTasks;
 		this.outputPath=outputPath;
 		this.inputFormatClass=CombineSmallFileInputFormat.class;
-		this.config = new Configuration();
 		this.trackerConfig = TrackerConfig.getInstance();
+		this.config = new Configuration();
+		this.config.set("hbase.zookeeper.quorum", "10.100.2.92,10.100.2.93,10.100.2.94");
+		this.config.set(Constant.TRACKER_CONFIG, SerializeUtil.serialize(this.trackerConfig));
+		this.config.set("hdfs.address", "hdfs://mycluster");
 		this.scan = scan;
 
 	}
@@ -152,9 +158,7 @@ import org.slf4j.LoggerFactory;
 	 * @throws IOException
 	 */
 	public Job getJob() throws IOException{
-			Job job = Job.getInstance();
-			//设置MR名称
-			job.setJar(this.jarname);
+			Job job = Job.getInstance(this.config,this.jarname);
 			//设置mapreduce所在的类名
 			job.setJarByClass(this.jarByClass);
 			//map类型
@@ -193,9 +197,7 @@ import org.slf4j.LoggerFactory;
 	 * @throws IOException
 	 */
 	public Job buildMapReduceJob() throws IOException{
-		Job job = Job.getInstance();
-		//设置MR名称
-		job.setJar(this.jarname);
+		Job job = Job.getInstance(this.config,this.jarname);
 		//设置mapreduce所在的类名
 		job.setJarByClass(this.jarByClass);
 		//map类型

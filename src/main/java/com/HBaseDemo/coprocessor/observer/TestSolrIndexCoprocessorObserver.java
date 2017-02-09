@@ -25,7 +25,7 @@ import java.util.NavigableMap;
  */
 public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
     private  static final Logger LOG = LoggerFactory.getLogger(TestSolrIndexCoprocessorObserver.class);
-    private  static final String solrUrl = "http://192.168.21.130:8080/solr/collection1";
+    private  static final String solrUrl = "http://192.168.21.130:8983/solr/collection1";
     private static final SolrServer solrServer = new ConcurrentUpdateSolrServer(solrUrl,10000,20);
 
 
@@ -68,7 +68,6 @@ public class TestSolrIndexCoprocessorObserver extends BaseRegionObserver{
             for(Cell cell : cells){
                 cQualifiter = Bytes.toString(cell.getQualifierArray(),cell.getQualifierLength(),cell.getQualifierOffset());
                 cValue = Bytes.toString(cell.getValueArray(),cell.getValueLength(),cell.getValueOffset());
-
                 doc.addField(cQualifiter,cValue);
             }
         }
