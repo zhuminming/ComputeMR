@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
 public class HConnectionPool {
 	private final static Logger LOG =LoggerFactory.getLogger(HConnectionPool.class);
 
-	private static List<HConnection> connections=Lists.newArrayList();  //��������������
+	private static List<HConnection> connections=Lists.newArrayList();  //容器，空闲连接
 	private static List<ExecutorService> executorList=Lists.newArrayList();
 	private static AtomicInteger num = new AtomicInteger(0);
 	private static int hbaseHConnectionNum;

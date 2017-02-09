@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * Created by zmm on 2017-01-15.
- * 描述：与HBase相关操作，建表与插入数据
+ * 鎻忚堪锛氫笌HBase鐩稿叧鎿嶄綔锛屽缓琛ㄤ笌鎻掑叆鏁版嵁
  */
 public class HbaseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(HbaseUtil.class);

@@ -10,19 +10,19 @@ import java.util.Properties;
 public class TrackerConfig  implements Serializable {
 
     /**
-     * mapreduceÅäÖÃ
+     * mapreduceé…ç½®
      */
-    private long  mrInputSplitSize;     //mapreduceÖĞmapÊäÈë·ÖÆ¬µÄ×î´ó´óĞ¡(µ¥Î»£ºbyte)
-    private int   mrMaxMapNum;          //mapreduceÖĞmapµÄ×î´ó¸öÊı
-    private float mrMapReduceNumRate;   //mapreduceÖĞmap¸öÊıÓëreduce¸öÊıµÄ±ÈÖµ
+    private long  mrInputSplitSize;     //mapreduceä¸­mapè¾“å…¥åˆ†ç‰‡çš„æœ€å¤§å¤§å°(å•ä½ï¼šbyte)
+    private int   mrMaxMapNum;          //mapreduceä¸­mapçš„æœ€å¤§ä¸ªæ•°
+    private float mrMapReduceNumRate;   //mapreduceä¸­mapä¸ªæ•°ä¸reduceä¸ªæ•°çš„æ¯”å€¼
 
 
     /**
-     * hbaseÅäÖÃ
+     * hbaseé…ç½®
      */
-    private  int hbaseHConnectionNum;  //hbase hconnectionÁ¬½ÓÊı
-    private  String zookeeper;         //zookeeperµØÖ·
-    private  int poolSize;             //hbaseÏß³Ì³Ø´óĞ¡
+    private  int hbaseHConnectionNum;  //hbase hconnectionè¿æ¥æ•°
+    private  String zookeeper;         //zookeeperåœ°å€
+    private  int poolSize;             //hbaseçº¿ç¨‹æ± å¤§å°
 
 
     public TrackerConfig(String filepath){
@@ -30,14 +30,14 @@ public class TrackerConfig  implements Serializable {
         try{
             DefProperties properties = new DefProperties();
             input = new FileInputStream(filepath);
-            properties.load(input);  //´ÓÊäÈëÁ÷ÖĞ¶ÁÈ¡ÊôĞÔÁĞ±í£¨¼ü ºÍ Öµ£©
+            properties.load(input);  //ä»è¾“å…¥æµä¸­è¯»å–å±æ€§åˆ—è¡¨ï¼ˆé”® å’Œ å€¼ï¼‰
 
-            this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //Ä¬ÈÏ2G
-            this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //Ä¬ÈÏ8¸ömap
-            this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //Ä¬ÈÏ0.3
+            this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //é»˜è®¤2G
+            this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //é»˜è®¤8ä¸ªmap
+            this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //é»˜è®¤0.3
 
             this.zookeeper = properties.getString("hbase.zookeeper.quorum");
-            this.poolSize = properties.getInt("hbase.pool.size", 15);	//hbaseÏß³Ì³Ø´óĞ¡Ä¬ÈÏÎª15
+            this.poolSize = properties.getInt("hbase.pool.size", 15);	//hbaseçº¿ç¨‹æ± å¤§å°é»˜è®¤ä¸º15
             this.hbaseHConnectionNum = properties.getInt("hbase.hconnection.num", 1);
         }catch(Exception e){
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class TrackerConfig  implements Serializable {
     }
 
     /**
-     * ¹¦ÄÜ£º³õÊ¼»¯TrackerConfig
+     * åŠŸèƒ½ï¼šåˆå§‹åŒ–TrackerConfig
      * @throws IOException
      */
     public static TrackerConfig getInstance() throws IOException {
@@ -64,8 +64,8 @@ public class TrackerConfig  implements Serializable {
 
 
     /**
-     * ¹¦ÄÜ£º×Ô¶¨Òå¼ÓÔØÅäÖÃÎÄ¼ş¶ÔÏó
-     * @extends Properties    ÊµÏÖ³Ö¾Ã»¯ÊôĞÔ¼¯µÄÀà
+     * åŠŸèƒ½ï¼šè‡ªå®šä¹‰åŠ è½½é…ç½®æ–‡ä»¶å¯¹è±¡
+     * @extends Properties    å®ç°æŒä¹…åŒ–å±æ€§é›†çš„ç±»
      */
     private static  class DefProperties extends Properties{
 
