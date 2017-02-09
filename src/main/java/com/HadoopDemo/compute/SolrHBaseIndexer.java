@@ -43,15 +43,7 @@ public class SolrHBaseIndexer{
                 for (Cell cell : result.listCells()) {
                     String fieldName = Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength());
                     String fieldValue = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
-                    if (fieldName.equalsIgnoreCase("searchCount")
-                            || fieldName.equalsIgnoreCase("totalSearchCost")
-                            || fieldName.equalsIgnoreCase("maxSearchCost")
-                            || fieldName.equalsIgnoreCase("pageTurningCount")
-                            || fieldName.equalsIgnoreCase("mainPageCount")
-                            || fieldName.equalsIgnoreCase("cookieId_bitmap")
-                            || fieldName.equalsIgnoreCase("userId_bitmap")) {
-                        solrDoc.addField(fieldName, fieldValue);
-                    }
+                    solrDoc.addField(fieldName, fieldValue);
                 }
                 solrServer.add(solrDoc);
                 solrServer.commit(true, true, true);
