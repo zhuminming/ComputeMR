@@ -14,10 +14,17 @@ import org.slf4j.LoggerFactory;
 import com.HBaseDemo.common.HbaseUtil;
 import com.google.common.collect.Lists;
 
+
+/**
+ * æ–‡ä»¶åï¼šHConnectionPool
+ * åŠŸèƒ½ï¼šhbase connectionæ± 
+ * åˆ›å»ºäººï¼šzhuminming
+ * åˆ›å»ºæ—¥æœŸï¼š2017-02-09
+ */
 public class HConnectionPool {
 	private final static Logger LOG =LoggerFactory.getLogger(HConnectionPool.class);
 
-	private static List<HConnection> connections=Lists.newArrayList();  //ÈİÆ÷£¬¿ÕÏĞÁ¬½Ó
+	private static List<HConnection> connections=Lists.newArrayList();  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private static List<ExecutorService> executorList=Lists.newArrayList();
 	private static AtomicInteger num = new AtomicInteger(0);
 	private static int hbaseHConnectionNum;
@@ -26,7 +33,7 @@ public class HConnectionPool {
 
 
 	/**
-	 * ¹¦ÄÜ£º³õÊ¼»¯hbaseÁ¬½Ó³Ø
+	 * åˆå§‹åŒ–Hbaseè¿æ¥æ± 
 	 * @param trackerConfig
 	 */
 	public static void initHConnectionPool(TrackerConfig trackerConfig){
@@ -34,12 +41,12 @@ public class HConnectionPool {
 	}
 
 
-	/**
-	 * ¹¦ÄÜ£º³õÊ¼»¯Á¬½Ó³Ø
-	 * @param hbaseHConnectionNum	ĞèÒª´´½¨µÄHConnection¸öÊı
-	 * @param zookeeper			zookeeperµØÖ·
-	 * @param poolSize				Ã¿¸öHConnection²¢·¢Êı
-	 */
+	 /**
+	  * åŠŸèƒ½ï¼šåˆå§‹åŒ–è¿æ¥æ± 
+	  * @param hbaseHConnectionNum	éœ€è¦åˆ›å»ºçš„HConnectionä¸ªæ•°
+	  * @param zookeeper			zookeeperåœ°å€
+	  * @param poolSize				æ¯ä¸ªHConnectionå¹¶å‘æ•°
+	  */
 	public static void initHConnectionPool(int hbaseHConnectionNum, String zookeeper, int poolSize){
 		if(connections==null||connections.size()==0){
 			synchronized (HConnection.class) {
@@ -58,10 +65,10 @@ public class HConnectionPool {
 	}
 
 
-	/**
-	 * ´ÓÁ¬½Ó³ØÀïµÃµ½Á¬½Ó
-	 * @return
-	 */
+	 /**
+	  * ä»è¿æ¥æ± é‡Œå¾—åˆ°è¿æ¥
+	  * @return
+	  */
 	public static HConnection getHConnection(){
 		if(connections.size()==0){
 			initHConnectionPool(hbaseHConnectionNum, zookeeper, poolSize);
@@ -70,11 +77,10 @@ public class HConnectionPool {
 		return connections.get(index);
 	}
 
-	/**
-	 * ¹Ø±ÕÁ¬½Ó
-	 * @return
-	 */
-	public static void close(){
+	 /**
+	  * åŠŸèƒ½ï¼šå…³é—­è¿æ¥æ± 
+	  */
+	public static synchronized void close(){
 		for(int i=0;i<connections.size();i++){
 			try {
 				connections.get(i).close();
