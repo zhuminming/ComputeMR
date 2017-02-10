@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.HadoopDemo.file.CombineSmallFileInputFormat;
 import com.HadoopDemo.file.HBaseTableInputFormat;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.client.Scan;
@@ -14,6 +15,7 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -34,7 +36,7 @@ import org.slf4j.LoggerFactory;
 	private String                               jarname;                   //设置jar名称
 	private Class<?>                             jarByClass;                //设置mapreduce所在的类名
 	private Class<? extends Mapper<?, ?, ?, ?>>  mapperClass;               //设置map类名
-	private Class<? extends  TableMapper<?,?>>   tableMapperClass;           //设置map类名
+	private Class<? extends TableMapper<?,?>>    tableMapperClass;           //设置map类名
 	private Class<?>                             outputKeyClass;            //设置map输出key值类型
 	private Class<?>                             outputValuesClass;         //设置map输出value值类型
 	private Class<? extends Partitioner<?, ?>>   partitionerClass;          //设置partitioner类名
@@ -76,13 +78,23 @@ import org.slf4j.LoggerFactory;
 		this.numReduceTasks=numReduceTasks;
 		this.inputPath=inputPath;
 		this.outputPath=outputPath;
-		this.inputFormatClass=CombineSmallFileInputFormat.class;
+//		this.inputFormatClass=CombineSmallFileInputFormat.class;
 		this.trackerConfig = TrackerConfig.getInstance();
 		this.config = new Configuration();
 		this.config.set("hbase.zookeeper.quorum", "10.100.2.92,10.100.2.93,10.100.2.94");
 		this.config.set(Constant.TRACKER_CONFIG, SerializeUtil.serialize(this.trackerConfig));
-		this.config.set("hdfs.address", "hdfs://mycluster");
-		
+		//copy阶段内存使用的最大值
+		this.config.setFloat(JobContext.SHUFFLE_INPUT_BUFFER_PERCENT, 0.1f);
+		//每次merge的文件个数，关系到需要merge次数的参数
+		this.config.setInt(JobContext.IO_SORT_FACTOR, 100);
+		//task超时时间(不检查超时时间)
+		this.config.setInt(JobContext.TASK_TIMEOUT, 0);
+		//同时创建的fetch线程个数
+		this.config.setInt(JobContext.SHUFFLE_PARALLEL_COPIES, 8);
+		//每个fetch取到的输出的大小能够占的内存比的大小
+		this.config.setFloat(JobContext.SHUFFLE_MEMORY_LIMIT_PERCENT, 0.25f);
+		this.config.setInt(JobContext.NUM_MAPS, 1);
+		this.config.setInt(JobContext.NUM_REDUCES, 1);		
 	}
 
 	/**
@@ -116,7 +128,8 @@ import org.slf4j.LoggerFactory;
 		this.config = new Configuration();
 		this.config.set("hbase.zookeeper.quorum", "10.100.2.92,10.100.2.93,10.100.2.94");
 		this.config.set(Constant.TRACKER_CONFIG, SerializeUtil.serialize(this.trackerConfig));
-		this.config.set("hdfs.address", "hdfs://mycluster");
+		this.config.setInt(JobContext.NUM_MAPS, 1);
+		this.config.setInt(JobContext.NUM_REDUCES, 1);
 		this.scan = scan;
 
 	}
@@ -184,8 +197,8 @@ import org.slf4j.LoggerFactory;
 			}
 			
 			//mapreduce输入
-			job.setInputFormatClass(this.inputFormatClass);
-		    setInputPath(job,inputPath);
+//			job.setInputFormatClass(this.inputFormatClass);
+		    setInputPath(job,this.inputPath);
 			//mapreduce输出					
 			FileOutputFormat.setOutputPath(job, new Path(this.outputPath));
 			
@@ -251,6 +264,8 @@ import org.slf4j.LoggerFactory;
 					Path path = new Path(pathStr);
 					FileInputFormat.addInputPath(job,path);
 					hasInput = true;
+				}else{
+					LOG.warn("path " + pathStr + "is not exit !");
 				}
 			}
 		}else{

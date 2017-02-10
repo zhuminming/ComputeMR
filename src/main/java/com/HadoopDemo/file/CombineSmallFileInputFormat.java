@@ -7,6 +7,8 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.CombineFileRecordReader;
+import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 
 
 /**
@@ -19,7 +21,7 @@ public class CombineSmallFileInputFormat extends CombineFileInputFormat<Object, 
 	@Override
 	public RecordReader<Object, Text> createRecordReader(InputSplit split,TaskAttemptContext context) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return new CombineFileRecordReader<Object, Text>((CombineFileSplit)split, context, CombineSmallFileRecordReader.class);
 	}
 
 }

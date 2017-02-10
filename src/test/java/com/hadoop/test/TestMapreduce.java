@@ -73,9 +73,9 @@ public class TestMapreduce {
 	}
 	
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException{
-		String inputPath = "";
-		String outputPath ="";
-		MapReduce mr = new MapReduce(true, "TestMapreduce", TestMapreduce.class, TestMapper.class, Text.class, Text.class, null, null, TestReducer.class, null, inputPath, outputPath);
+		String inputPath = args[0];
+		String outputPath =args[1];
+		MapReduce mr = new MapReduce(true, "TestMapreduce", TestMapreduce.class, TestMapper.class, Text.class, Text.class, null, null, TestReducer.class, null, inputPath, outputPath+"/01");
 		mr.waitForCompletion();
 	}
 

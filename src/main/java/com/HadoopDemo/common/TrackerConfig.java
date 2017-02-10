@@ -9,6 +9,13 @@ import java.util.Properties;
  */
 public class TrackerConfig  implements Serializable {
 
+	
+	/**
+	 * hdfs地址
+	 */
+	private String hdfsClusterName;		//hdfs的集群名
+	private String hdfsAddr;			//hdfs namenode, secondary namenode地址，ip:port,ip:port
+	
     /**
      * mapreduce配置
      */
@@ -32,6 +39,9 @@ public class TrackerConfig  implements Serializable {
             input = new FileInputStream(filepath);
             properties.load(input);  //从输入流中读取属性列表（键 和 值）
 
+            this.hdfsClusterName = properties.getString("hdfs.cluster.name");
+    		this.hdfsAddr = properties.getString("hdfs.address");
+    		
             this.mrInputSplitSize = Long.parseLong(properties.getString("mapreduce.input.split.size", "2000000000"));     //默认2G
             this.mrMaxMapNum = properties.getInt("mapreduce.map.tasks.maxnum", 8);	               						 //默认8个map
             this.mrMapReduceNumRate = Float.parseFloat(properties.getString("mapreduce.mapandreduce.tasks.rate", "0.3")); //默认0.3
