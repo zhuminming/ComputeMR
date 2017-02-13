@@ -49,7 +49,7 @@ public class HConnectionPool {
 	  */
 	public static void initHConnectionPool(int hbaseHConnectionNum, String zookeeper, int poolSize){
 		if(connections==null||connections.size()==0){
-			synchronized (HConnection.class) {
+			synchronized (HConnectionPool.class) {
 				if(connections==null||connections.size()==0){
 					for(int num=0;num<hbaseHConnectionNum;num++){
 						ExecutorService pool = Executors.newFixedThreadPool(poolSize);

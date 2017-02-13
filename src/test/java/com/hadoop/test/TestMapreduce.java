@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,15 +23,22 @@ public class TestMapreduce {
 	private static final Logger LOG =LoggerFactory.getLogger(TestMapreduce.class);
 	public static class TestMapper extends Mapper<Object, Text, Text, Text>{
 		private AtomicInteger count =new AtomicInteger(0);
+		private MultipleOutputs< Text, Text> multiples;
 		@Override
 		public void setup(Context context) throws IOException, InterruptedException{
 			super.setup(context);
+			multiples = new MultipleOutputs<Text, Text>(context);
 		}
 		
 		@Override
 		public void map(Object key,Text value,Context context) throws IOException, InterruptedException{
-			String[] tmp = value.toString().split("\t");
+			String tmpValue=value.toString().replace(",", " ");
+			tmpValue=value.toString().replace(".", " ");
+			String[] tmp = tmpValue.toString().split(" ");
+
 			for(String str : tmp){
+				if(str == null||str.length()==0) continue;
+//				multiples.write(new Text(str), new Text(Long.toString(1L)), "out_result/");
 				context.write(new Text(str), new Text(Long.toString(1L)));
 				count.incrementAndGet();
 				if(count.get()%1000==0) LOG.info("count "+count.get());
@@ -40,6 +48,7 @@ public class TestMapreduce {
 		@Override
 		public void cleanup(Context context) throws IOException, InterruptedException{
 			LOG.info("count total "+count.get());
+			multiples.close();
 			super.cleanup(context);
 		}
 	}
@@ -53,6 +62,7 @@ public class TestMapreduce {
 			TrackerConfig config =(TrackerConfig) SerializeUtil.deSerialize(configuration.get(Constant.TRACKER_CONFIG));
 			HConnectionPool.initHConnectionPool(config);
 			client =new HbaseClient("ubas:stats_web_page");
+			client.getHTableInterface();
 		}
 		
 		@Override
@@ -66,8 +76,8 @@ public class TestMapreduce {
 		
 		@Override
 		public void cleanup(Context context) throws IOException, InterruptedException{
-			HConnectionPool.close();
 			client.flush();
+			HConnectionPool.close();
 			super.cleanup(context);
 		}
 	}

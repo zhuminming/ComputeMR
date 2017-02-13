@@ -126,7 +126,7 @@ import org.slf4j.LoggerFactory;
 		this.inputFormatClass=CombineSmallFileInputFormat.class;
 		this.trackerConfig = TrackerConfig.getInstance();
 		this.config = new Configuration();
-		this.config.set("hbase.zookeeper.quorum", "10.100.2.92,10.100.2.93,10.100.2.94");
+		this.config.set("hbase.zookeeper.quorum", this.trackerConfig.getZookeeper());
 		this.config.set(Constant.TRACKER_CONFIG, SerializeUtil.serialize(this.trackerConfig));
 		this.config.setInt(JobContext.NUM_MAPS, 1);
 		this.config.setInt(JobContext.NUM_REDUCES, 1);

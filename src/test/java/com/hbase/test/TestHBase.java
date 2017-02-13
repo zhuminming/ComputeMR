@@ -1,10 +1,13 @@
 package com.hbase.test;
 
 import com.HBaseDemo.common.HbaseUtil;
+import com.HadoopDemo.common.TrackerConfig;
 import com.google.common.collect.Lists;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -23,37 +26,33 @@ public class TestHBase {
 
     /**
      * @param args
+     * @throws IOException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         config = HBaseConfiguration.create();
-        config.set("hbase.zookeeper.quorum", "192.103.101.104");
-        HbaseUtil.createTable(config, tableName, columnFamily);
-        try {
-            table = new HTable(config, Bytes.toBytes(tableName));
-            for (int k = 0; k < 1; k++) {
-                Thread t = new Thread() {
-                    public void run() {
-                        for (int i = 0; i < 100000; i++) {
-                            List<Put>  list = Lists.newArrayList();
-                            list.add(HbaseUtil.createPut("stats"));
-                            HbaseUtil.inputData(table,list);
-                            Calendar c = Calendar.getInstance();
-                            String dateTime = c.get(Calendar.YEAR) + "-"
-                                    + c.get(Calendar.MONTH) + "-"
-                                    + c.get(Calendar.DATE) + "T"
-                                    + c.get(Calendar.HOUR) + ":"
-                                    + c.get(Calendar.MINUTE) + ":"
-                                    + c.get(Calendar.SECOND) + ":"
-                                    + c.get(Calendar.MILLISECOND) + "Z 写入: "
-                                    + i * 1000;
-                            System.out.println(dateTime);
-                        }
-                    }
-                };
-                t.start();
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        TrackerConfig trackerConfig;
+        HTableInterface table = null; 
+		try {
+			trackerConfig = TrackerConfig.getInstance();
+			config.set("hbase.zookeeper.quorum",trackerConfig.getZookeeper() );
+			table = new HTable(config, "ubas:stats_web_page");
+			table.setAutoFlush(false);
+	        for(int i=0;i<10;i++){
+	        	Put put = new Put(Bytes.toBytes("test"+i));
+	        	put.add(Bytes.toBytes("stats"), Bytes.toBytes("column"), Bytes.toBytes("value"+i));
+	        	table.put(put);
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				table.flushCommits();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+       
     }
 }

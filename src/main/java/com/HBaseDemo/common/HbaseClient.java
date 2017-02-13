@@ -44,7 +44,9 @@ public class HbaseClient {
 	
 	public void flush(){
 		try {
-			hTableInterface.flushCommits();
+			synchronized(HbaseClient.class){
+				hTableInterface.flushCommits();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
