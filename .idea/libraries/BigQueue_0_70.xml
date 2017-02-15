@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="BigQueue-0.70">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/BigQueue-0.70.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/EasyFastJson-2.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

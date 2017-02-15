@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: HadoopDemo.mr.compute.TestMR
+Main-Class: com.HadoopDemo.compute.TestMR
 
