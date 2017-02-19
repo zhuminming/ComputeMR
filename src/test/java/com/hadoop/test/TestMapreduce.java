@@ -55,6 +55,8 @@ public class TestMapreduce {
 	
 	public static class TestReducer extends Reducer<Text, Text, Text, Text>{
 		private HbaseClient client ;
+		private MultipleOutputs< Text, Text> multiples;
+
 		@Override
 		public void setup(Context context) throws IOException, InterruptedException{
 			super.setup(context);
@@ -63,6 +65,8 @@ public class TestMapreduce {
 			HConnectionPool.initHConnectionPool(config);
 			client =new HbaseClient("ubas:stats_web_page");
 			client.getHTableInterface();
+			multiples = new MultipleOutputs<Text, Text>(context);
+
 		}
 		
 		@Override
@@ -71,13 +75,16 @@ public class TestMapreduce {
 			for(Text value : values){
 				num+=Long.parseLong(value.toString());
 			}
-			client.putPuts(key.toString(), "stats", "stats", Bytes.toBytes(num));
+//			client.putPuts(key.toString(), "stats", "stats", Bytes.toBytes(num));
+			multiples.write(key, new Text(Long.toString(num)), "out_result/");
+
 		}
 		
 		@Override
 		public void cleanup(Context context) throws IOException, InterruptedException{
 			client.flush();
 			HConnectionPool.close();
+			multiples.close();
 			super.cleanup(context);
 		}
 	}

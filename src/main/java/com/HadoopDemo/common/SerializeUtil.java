@@ -6,10 +6,11 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-
 /**
- * Created by minming.zhu on 2017/1/23.
- * 功能： 序列化工具
+ * 文件名：SerializeUtil
+ * 功能：序列化工具
+ * 创建人：zhuminming
+ * 创建日期：2017-02-09
  */
 public class SerializeUtil {
     private static final Logger LOG = LoggerFactory.getLogger(SerializeUtil.class);

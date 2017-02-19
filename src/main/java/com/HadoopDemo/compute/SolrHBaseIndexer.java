@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
- * Created by minming.zhu on 2017/1/23.
+ * 文件名：SolrHBaseIndexer
+ * 功能： 通过MR操作简历solr索引
+ * 创建人：zhuminming
+ * 创建日期：2017-02-09
  */
 public class SolrHBaseIndexer{
     private static  String SOLR_SERVER="http://192.168.21.130:8983/solr"; // Solr服务器地址

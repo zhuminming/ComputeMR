@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by minming.zhu on 2017/1/5.
+ * 文件名：Hdfs
+ * 功能：HDFS（分布式文件系统）操作工具
+ * 创建人：zhuminming
+ * 创建日期：2017-02-09
  */
 public class Hdfs implements Serializable{
     private FileSystem fileSystem;

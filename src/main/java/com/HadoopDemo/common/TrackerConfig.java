@@ -5,7 +5,10 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * Created by minming.zhu on 2017/1/5.
+ * 文件名：SerializeUtil
+ * 功能： 集群相关配置文件类
+ * 创建人：zhuminming
+ * 创建日期：2017-02-09
  */
 public class TrackerConfig  implements Serializable {
 

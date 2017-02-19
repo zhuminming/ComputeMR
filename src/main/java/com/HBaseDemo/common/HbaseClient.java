@@ -8,7 +8,12 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.HadoopDemo.common.HConnectionPool;
-
+/**
+ * 文件名：HbaseClient
+ * 功能：与HBase插入，删除等相关数据操作
+ * 创建人：zhuminming
+ * 创建日期：2017-02-09
+ */
 public class HbaseClient {
 	private HTableInterface hTableInterface=null;
 	private String tablename;

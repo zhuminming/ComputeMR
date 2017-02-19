@@ -18,7 +18,7 @@ public class MonitorClusterImpl implements MonitorCluster{
 	    public String extractMonitorData() {
 	        //TODO 通过调用API获得IP以及参数
 	        HMasterRoleInfo monitorDataPoint = new HMasterRoleInfo();
-	        String URL = "http://10.100.2.94:7103/jmx";
+	        String URL = "http://192.168.21.128:7103/jmx";
 	        JSONObject serverJson = qryJSonObjectFromJMX(URL, server);
 //	        JSONObject assignJson = qryJSonObjectFromJMX(URL, assignment);
 	        try {

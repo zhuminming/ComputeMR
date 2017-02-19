@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * Created by zmm on 2017-01-15.
- * 描述：与HBase相关操作，建表与插入数据
+ * 描述：与HBase建立连接操作
  */
 public class HbaseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(HbaseUtil.class);
@@ -55,46 +55,5 @@ public class HbaseUtil {
             LOG.error("can not create hbase connection", e);
         }
         return connection;
-    }
-
-
-    public static void createTable(Configuration config, String tableName,String columnFamily) {
-        HBaseAdmin hBaseAdmin;
-        try {
-            hBaseAdmin = new HBaseAdmin(config);
-            if (hBaseAdmin.tableExists(tableName)) {
-                return;
-            }
-            HTableDescriptor tableDescriptor = new HTableDescriptor(tableName);
-            tableDescriptor.addFamily(new HColumnDescriptor(columnFamily));
-            hBaseAdmin.createTable(tableDescriptor);
-            hBaseAdmin.close();
-        } catch (MasterNotRunningException e) {
-            e.printStackTrace();
-        } catch (ZooKeeperConnectionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void inputData(HTable table, List<Put> puts) {
-        try {
-            table.put(puts);
-            table.flushCommits();
-            puts.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Put createPut(String columnFamily) {
-        String str = "hadoop spark hbase" ;
-        byte[] family = Bytes.toBytes(columnFamily);
-        byte[] rowKey = Bytes.toBytes(System.currentTimeMillis());
-        Put put = new Put(rowKey);
-        put.add(family, Bytes.toBytes("stats"), Bytes.toBytes(str));
-
-        return put;
     }
 }
