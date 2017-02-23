@@ -24,7 +24,7 @@ public class Test {
     public void crawling(String[] seeds) { // 定义过滤器，提取以http://www.lietu.com开头的链接  
         LinkFilter filter = new LinkFilter() {  
             public boolean accept(String url) {  
-                if (url.startsWith("http://www.baidu.com"))  
+                if (url.startsWith("https://www.jd.com"))  
                     return true;  
                 else  
                     return false;  
@@ -56,6 +56,6 @@ public class Test {
     // main 方法入口  
     public static void main(String[] args) {  
     	Test crawler = new Test();  
-        crawler.crawling(new String[] { "http://www.baidu.com" });  
+        crawler.crawling(new String[] { "https://www.jd.com" });  
     }  
 }

@@ -35,6 +35,7 @@ public class HtmlParserTool {
             OrFilter linkFilter = new OrFilter(new NodeClassFilter(  
                     LinkTag.class), frameFilter);  
             // 得到所有经过过滤的标签  
+            parser.setEncoding("UTF-8"); 
             NodeList list = parser.extractAllNodesThatMatch(linkFilter);  
             for (int i = 0; i < list.size(); i++) {  
                 Node tag = list.elementAt(i);  
