@@ -1,35 +1,21 @@
 package com.spider;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.util.EntityUtils;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class DownLoadHtml {
 	 /* 下载 url 指向的网页 */  
-    public String downloadFile(String url) {  
-    	String entity = null;  
-        /* 1.生成 HttpClinet 对象并设置参数 */  
-        HttpClient httpClient = HttpClients.createDefault();  
-  
-        /* 2.生成 HttpGet 对象并设置参数 */  
-        HttpGet getMethod = new HttpGet(url);  
-  
-        /* 3.执行 HTTP GET 请求 */  
+    public static String downloadFile(String url) {
+    	String entity =null;
         try { 
-            HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1,HttpStatus.SC_OK, "OK");
-            response = httpClient.execute(getMethod);  
-            // 判断访问的状态码  
-            if ( response.getStatusLine().getStatusCode()!= HttpStatus.SC_OK) {  
-                System.err.println("Method failed: " + response.getStatusLine()); 
-                return null;
-            }  
-            entity = EntityUtils.toString (response.getEntity(),"utf-8");
+	         //创建一个webclient
+	   	     WebClient webClient = new WebClient();
+	   	     //htmlunit 对css和javascript的支持不好，所以请关闭之
+	   	     webClient.getOptions().setJavaScriptEnabled(false);
+	   	     webClient.getOptions().setCssEnabled(false);
+	   	     //获取页面
+	   	     HtmlPage page = webClient.getPage(url);
+	   	     entity=page.asXml();
         }catch(Exception e){
         	e.printStackTrace();
         }
