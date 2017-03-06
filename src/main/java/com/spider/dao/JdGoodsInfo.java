@@ -7,6 +7,7 @@ public class JdGoodsInfo {
 	private int    good_buy;        //商品购买数量
 	private String good_provider;   //商品供应商
 	private String good_type;       //商品类别
+	private boolean IS_JD;          //是否是京东自营
 	public int getGood_id() {
 		return good_id;
 	}
@@ -42,6 +43,12 @@ public class JdGoodsInfo {
 	}
 	public void setGood_type(String good_type) {
 		this.good_type = good_type;
+	}
+	public boolean isIS_JD() {
+		return IS_JD;
+	}
+	public void setIS_JD(boolean iS_JD) {
+		IS_JD = iS_JD;
 	}
 
 }
