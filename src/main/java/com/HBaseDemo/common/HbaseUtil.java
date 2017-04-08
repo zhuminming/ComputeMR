@@ -2,21 +2,15 @@ package com.HBaseDemo.common;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HConnection;
 import org.apache.hadoop.hbase.client.HConnectionManager;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -56,4 +50,25 @@ public class HbaseUtil {
         }
         return connection;
     }
+
+
+	public static HBaseAdmin getHBaseAdmin(String zookeeper) {
+		// TODO Auto-generated method stub
+		Configuration conf = HBaseConfiguration.create();
+        conf.set("hbase.zookeeper.quorum", zookeeper);
+        HBaseAdmin admin = null;
+		try {
+			new HBaseAdmin(conf);
+		} catch (MasterNotRunningException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ZooKeeperConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return  admin;
+	}
 }

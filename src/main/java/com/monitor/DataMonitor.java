@@ -1,4 +1,3 @@
-
 package com.monitor;
 
 import java.io.IOException;
@@ -17,6 +16,8 @@ import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 
+import com.HBaseDemo.common.HbaseUtil;
+import com.HadoopDemo.common.HdfsProxy;
 import com.HadoopDemo.common.TrackerConfig;
 
 public class DataMonitor {

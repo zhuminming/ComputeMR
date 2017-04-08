@@ -185,4 +185,20 @@ public class TrackerConfig  implements Serializable {
         this.poolSize = poolSize;
     }
 
+	public String getHdfsClusterName() {
+		return hdfsClusterName;
+	}
+
+	public void setHdfsClusterName(String hdfsClusterName) {
+		this.hdfsClusterName = hdfsClusterName;
+	}
+
+	public String getHdfsAddr() {
+		return hdfsAddr;
+	}
+
+	public void setHdfsAddr(String hdfsAddr) {
+		this.hdfsAddr = hdfsAddr;
+	}
+
 }

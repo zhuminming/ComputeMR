@@ -29,30 +29,36 @@ public class TestHBase {
      * @throws IOException 
      */
     public static void main(String[] args){
-        config = HBaseConfiguration.create();
-        TrackerConfig trackerConfig;
-        HTableInterface table = null; 
-		try {
-			trackerConfig = TrackerConfig.getInstance();
-			config.set("hbase.zookeeper.quorum",trackerConfig.getZookeeper() );
-			table = new HTable(config, "ubas:stats_web_page");
-			table.setAutoFlush(false);
-	        for(int i=0;i<10;i++){
-	        	Put put = new Put(Bytes.toBytes("test"+i));
-	        	put.add(Bytes.toBytes("stats"), Bytes.toBytes("column"), Bytes.toBytes("value"+i));
-	        	table.put(put);
-	        }
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			try {
-				table.flushCommits();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-       
+//        config = HBaseConfiguration.create();
+//        TrackerConfig trackerConfig;
+//        HTableInterface table = null; 
+//		try {
+//			trackerConfig = TrackerConfig.getInstance();
+//			config.set("hbase.zookeeper.quorum",trackerConfig.getZookeeper() );
+//			table = new HTable(config, "ubas:stats_web_page");
+//			table.setAutoFlush(false);
+//	        for(int i=0;i<10;i++){
+//	        	Put put = new Put(Bytes.toBytes("test"+i));
+//	        	put.add(Bytes.toBytes("stats"), Bytes.toBytes("column"), Bytes.toBytes("value"+i));
+//	        	table.put(put);
+//	        }
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}finally{
+//			try {
+//				table.flushCommits();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+    	      int i=10;
+    	      int j=6;
+    	      int m=3;
+    	      i=++i;
+    	      System.out.println(i);
+    	      System.out.println(i);
+    	      System.out.println(i--);
     }
 }

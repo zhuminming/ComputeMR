@@ -12,9 +12,10 @@ public class DownLoadHtml {
         	if(!url.contains("http://")){
         		url="http:"+url;
         	}
+        	System.out.println(url);
 	         //创建一个webclient
 	   	     WebClient webClient = new WebClient(BrowserVersion.CHROME);
-	   	     //htmlunit 对css和javascript的支持不好，所以请关闭之
+	   	     //htmlunit 对css和javascript的支持不好，所以请关闭之4
 	   	     webClient.getOptions().setJavaScriptEnabled(false);
 	   	     webClient.getOptions().setCssEnabled(false);
 	   	     //获取页面

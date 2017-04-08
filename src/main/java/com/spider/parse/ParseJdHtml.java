@@ -52,6 +52,9 @@ public class ParseJdHtml implements HtmlParseInterface{
 		for(Element element : elements2){
 			String good_id = element.select("div[class=left-btns]").select("a").attr("data-id");
 			String good_name= element.select("div[class=sku-name]").text();
+			String good_price = element.select("span[class=p-price]").select("span").text();
+			System.out.println(good_name);
+			System.out.println(good_price);
 			info.setGood_id(Integer.parseInt(good_id));
 			info.setGood_name(good_name);
 		}
