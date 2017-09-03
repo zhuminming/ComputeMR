@@ -20,6 +20,10 @@ public class Tree {
         return node;
     }
 
+    /*
+     *功能：通过递归实现深度优先搜索遍历算法
+     *
+     * */
     public void deepFirstSearch(Node treeNode){
         System.out.println(treeNode.getNodeName());
         List<Node> list = treeNode.getClientS();
@@ -28,15 +32,22 @@ public class Tree {
         }
     }
 
+    /*
+     * 功能：通过递归实现广度优先搜索遍历算法
+     * */
     public  void breadthFirstSearch(Node treeNode) {
         List<Node> tmpLists = Lists.newArrayList();
         tmpLists.add(treeNode);
-        while(true){
-            tmpLists=getSameLevelClientNode(tmpLists);
-            if(tmpLists.isEmpty()) return;
-            printNodeInfo(tmpLists);
-        }
+        getSameLevelClientNode(tmpLists);
+    }
 
+    public void breadthFirstSearchBynoRecursion(Node treeNode){
+        List<Node> tmpLists = Lists.newArrayList();
+        tmpLists.add(treeNode);
+        while(!tmpLists.isEmpty()){
+            printNodeInfo(tmpLists);
+            tmpLists=getLevelClientNode(tmpLists);
+        }
     }
 
     private void printNodeInfo(List<Node> list){
@@ -47,9 +58,23 @@ public class Tree {
 
 
     /*
-     * 功能：获取一层上面所有的节点
+     * 功能：递归获取一层上面所有的节点
      *  */
-    private  List<Node> getSameLevelClientNode(List<Node> levelLists){
+    private  void getSameLevelClientNode(List<Node> levelLists){
+        List<Node> list = Lists.newArrayList();
+        for(Node node : levelLists){
+            list.addAll(node.getClientS());
+        }
+        printNodeInfo(list);
+        if(list.isEmpty()) return;
+        getSameLevelClientNode(list);
+    }
+
+    /*
+     * 功能：获取一层上面所有的节点
+     *
+     */
+    private  List<Node> getLevelClientNode(List<Node> levelLists){
         List<Node> list = Lists.newArrayList();
         for(Node node : levelLists){
             list.addAll(node.getClientS());
@@ -73,6 +98,8 @@ public class Tree {
 
         System.out.println("..................breadthFirstSearch................");
         tree.breadthFirstSearch(node);
+        System.out.println("..................breadthFirstSearchByNoRecursion................");
+        tree.breadthFirstSearchBynoRecursion(node);
         System.out.println("..................deepFirstSearch...................");
         tree.deepFirstSearch(node);
     }
