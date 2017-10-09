@@ -15,8 +15,8 @@ public class MyProxy implements  IProxyProtocol
     }
 
     public long getProtocolVersion(String protocol,long clientVersion) throws IOException{
-        System.out.println("MyProxy.ProtocolVersion=" + IProxyProtocol.VERSION);
-        return IProxyProtocol.VERSION;
+        System.out.println("MyProxy.ProtocolVersion=" + IProxyProtocol.versionID);
+        return IProxyProtocol.versionID;
     }
 
     public ProtocolSignature getProtocolSignature(String protocol,

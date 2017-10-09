@@ -13,7 +13,7 @@ public class MyClient {
     static InetSocketAddress addr = new InetSocketAddress(MyServer.IPADDRESS,MyServer.PORT);
     public static void main(String[] args) throws IOException {
         System.out.println("client start running......");
-        IProxyProtocol proxy =  RPC.getProxy(IProxyProtocol.class, IProxyProtocol.VERSION, addr, new Configuration());
+        IProxyProtocol proxy =  RPC.getProxy(IProxyProtocol.class, IProxyProtocol.versionID, addr, new Configuration());
         proxy.add(35,35);
         System.out.println("35+35");
 
