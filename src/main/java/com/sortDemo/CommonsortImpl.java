@@ -1,4 +1,4 @@
-package com.suanfaDemo;
+package com.sortDemo;
 
 /**
  * Created by zmm on 2017-09-04.
@@ -218,6 +218,7 @@ public class CommonsortImpl {
 
         }
 
+        //划分后的序列段两两排序合并
         private void merge_Sort(int[] arr,int left , int mid , int last , int[] temp){
             int i= left;
             int j = mid+1;
@@ -249,6 +250,7 @@ public class CommonsortImpl {
         }
 
 
+        //序列每次折半拆分
         private void merge_Sort(int[] arr,int left , int last , int[] temp){
             if(left<last){
                 int mid = (int) (left+last)/2;
@@ -256,6 +258,12 @@ public class CommonsortImpl {
                 merge_Sort(arr, mid+1, last, temp);  //右边归并排序，使得右子序列有序
                 merge_Sort(arr, left,mid, last, temp); //将两个有序子数组合并操作
             }
+        }
+    }
+
+    class RadixSort{
+        public void radix_sort(int[] arr){
+
         }
     }
     private void println(int[] arr){
@@ -270,22 +278,22 @@ public class CommonsortImpl {
         int[] arr={48,27,13,76,97,65,38,49};
         CommonsortImpl sort =new CommonsortImpl();
         BubbleSort bubbleSort = sort.new BubbleSort();
-//        System.out.println(".........................BubbleSort.......................");
-//        bubbleSort.bubbleSort(arr);
-//        System.out.println(".........................SelectionSort.......................");
-//        SelectionSort selectionSort = sort.new SelectionSort();
-//        selectionSort.selectionSort(arr);
-//        System.out.println(".........................InsertSort.......................");
-//        InsertSort insertSort = sort.new InsertSort();
-//        insertSort.insertSort(arr);
-//        System.out.println(".........................QuickSort.......................");
-//        QuickSort quickSort = sort.new QuickSort();
-//        quickSort.quickSort(arr);
-//        System.out.println(".........................HashInsertSort.......................");
-//        HashInsertSort hashInsertSort = sort.new HashInsertSort();
-//        hashInsertSort.hashInsertSort(arr);
-//        System.out.println(".........................HeapSort.......................");
-//        HeapSort heapSort = sort.new HeapSort();
+        System.out.println(".........................BubbleSort.......................");
+        bubbleSort.bubbleSort(arr);
+        System.out.println(".........................SelectionSort.......................");
+        SelectionSort selectionSort = sort.new SelectionSort();
+        selectionSort.selectionSort(arr);
+        System.out.println(".........................InsertSort.......................");
+        InsertSort insertSort = sort.new InsertSort();
+        insertSort.insertSort(arr);
+        System.out.println(".........................QuickSort.......................");
+        QuickSort quickSort = sort.new QuickSort();
+        quickSort.quickSort(arr);
+        System.out.println(".........................HashInsertSort.......................");
+        HashInsertSort hashInsertSort = sort.new HashInsertSort();
+        hashInsertSort.hashInsertSort(arr);
+        System.out.println(".........................HeapSort.......................");
+        HeapSort heapSort = sort.new HeapSort();
         System.out.println(".........................MergeSort.......................");
         MergeSort mergeSort = sort.new MergeSort();
         mergeSort.mergeSort(arr);
