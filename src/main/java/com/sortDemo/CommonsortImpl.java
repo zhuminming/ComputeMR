@@ -294,6 +294,7 @@ public class CommonsortImpl {
         hashInsertSort.hashInsertSort(arr);
         System.out.println(".........................HeapSort.......................");
         HeapSort heapSort = sort.new HeapSort();
+        heapSort.heapSort(arr);
         System.out.println(".........................MergeSort.......................");
         MergeSort mergeSort = sort.new MergeSort();
         mergeSort.mergeSort(arr);
