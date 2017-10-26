@@ -80,9 +80,9 @@ public class CommonsortImpl {
             println(arr);
         }
         private void quickSort(int[] arr,int left ,int right){
-            if(left>right) return;
+            if(left>=right) return;
             int middle = partition(arr, left, right);
-            quickSort(arr,left ,middle-1);
+            quickSort(arr,left ,middle);
             quickSort(arr,middle+1 ,right);
         }
 
@@ -157,8 +157,9 @@ public class CommonsortImpl {
                 arr[0]=arr[last-i];
                 arr[last-i]=max;
                 System.out.print(arr[last-i]);
+                System.out.print(",");
             }
-
+            System.out.println();
         }
 
         /*

@@ -13,14 +13,15 @@ public class CommonsearchImpl {
         }
 
         private int binarySearch(int[] arr, int  value,int left , int right){
-            int length = arr.length;
-            int mid = (int)length/2;
+            int mid = (int)(right-left)/2;
             if(arr[mid]<value){
                 return  binarySearch(arr,value,left,mid);
             }else if(arr[mid]>value){
-                return  binarySearch(arr,value,mid,right);
+                return  binarySearch(arr,value,mid+1,right);
+            }else if(arr[mid]==value){
+                return mid;
             }
-            return mid;
+            return -1;
         }
     }
 
@@ -29,6 +30,6 @@ public class CommonsearchImpl {
         CommonsearchImpl search =new CommonsearchImpl();
         System.out.println(".........................BinarySearch.......................");
         BinarySearch binarySearch = search.new BinarySearch();
-        binarySearch.binarySearch(arr,27);
+        System.out.println(binarySearch.binarySearch(arr, 27));
     }
 }
