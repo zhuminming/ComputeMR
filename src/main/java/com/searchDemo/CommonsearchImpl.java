@@ -27,8 +27,8 @@ public class CommonsearchImpl {
         }
     }
     /*
-     * 插入查找（折半查找）
-     * 时间复杂度为O(log2n)
+     * 插入查找
+     * 时间复杂度为O(log2(log2n))
      * */
     class InsertSearch{
         public void insertSearch(int[] arr, int  value){
