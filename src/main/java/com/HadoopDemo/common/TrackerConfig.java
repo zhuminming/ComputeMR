@@ -1,7 +1,10 @@
 package com.HadoopDemo.common;
 
 
+import com.google.common.collect.Lists;
+
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -34,6 +37,11 @@ public class TrackerConfig  implements Serializable {
     private  String zookeeper;         //zookeeper地址
     private  int poolSize;             //hbase线程池大小
 
+    /*
+     * redis集群配置
+     * */
+    private List<String> redisCluster = Lists.newArrayList();  //redis集群
+
 
     public TrackerConfig(String filepath){
         InputStream input = null;
@@ -52,12 +60,14 @@ public class TrackerConfig  implements Serializable {
             this.zookeeper = properties.getString("hbase.zookeeper.quorum");
             this.poolSize = properties.getInt("hbase.pool.size", 15);	//hbase线程池大小默认为15
             this.hbaseHConnectionNum = properties.getInt("hbase.hconnection.num", 1);
+
+            String[] nodes =  properties.getString("redis.cluster").split(",");
+            for(String node:nodes){
+                this.redisCluster.add(node);
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
-
-
-
     }
 
     /**
@@ -71,7 +81,7 @@ public class TrackerConfig  implements Serializable {
             int index = thisDirPath.indexOf(StringUtil.SIGN_CONFIG);
             return new TrackerConfig(thisDirPath.substring(0,index+StringUtil.SIGN_CONFIG.length())+"/conf/config.properties");
         }else{
-            return new TrackerConfig("../ComputeMR/src/main/java/com/conf/config.properties");
+            return new TrackerConfig("../ComputeMR/source/conf/config.properties");
         }
     }
 
@@ -201,4 +211,7 @@ public class TrackerConfig  implements Serializable {
 		this.hdfsAddr = hdfsAddr;
 	}
 
+    public List<String> getRedisCluster() {return redisCluster;}
+
+    public void setRedisCluster(List<String> redisCluster) {this.redisCluster = redisCluster;}
 }
