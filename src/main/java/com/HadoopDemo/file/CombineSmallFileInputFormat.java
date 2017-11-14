@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 
 /**
  * 文件名：CombineSmallFileInputFormat
- * 功能：自定义小文件合并后再根据配置文件设置的maxsplit大小进行切割
+ * 功能：自定义小文件合并后再根据配置文件设置的maxsplit大小进行切割和读取
  * 创建人：minming.zhu
  * 创建日期：2016-12-21
  */

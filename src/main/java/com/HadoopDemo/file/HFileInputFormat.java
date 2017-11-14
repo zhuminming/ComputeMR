@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by zmm on 2017/11/14.
+ * 文件名：HFileInputFormat
+ * 功能：Hbase中的HFile文件合并后再根据配置文件设置的maxsplit大小进行切割和读取
+ * 创建人：minming.zhu
+ * 创建日期：2017-11-14.
  */
 public class HFileInputFormat extends CombineFileInputFormat<ImmutableBytesWritable,KeyValue>{
     //读取Hfile文件

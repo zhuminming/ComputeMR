@@ -16,8 +16,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import java.io.IOException;
 
-/**读取HFile文件
- * Created by zmm on 2017/11/14.
+/**
+ * 文件名：HFileRecordReader
+ * 功能：读取HFile文件
+ * 创建人：minming.zhu
+ * 创建日期：2017-11-14.
  */
 public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyValue> {
 
