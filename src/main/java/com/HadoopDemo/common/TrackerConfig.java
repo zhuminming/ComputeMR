@@ -48,6 +48,7 @@ public class TrackerConfig  implements Serializable {
         try{
             DefProperties properties = new DefProperties();
             input = new FileInputStream(filepath);
+            System.out.println(new File(filepath).getName());
             properties.load(input);  //从输入流中读取属性列表（键 和 值）
 
             this.hdfsClusterName = properties.getString("hdfs.cluster.name");
@@ -81,6 +82,7 @@ public class TrackerConfig  implements Serializable {
             int index = thisDirPath.indexOf(StringUtil.SIGN_CONFIG);
             return new TrackerConfig(thisDirPath.substring(0,index+StringUtil.SIGN_CONFIG.length())+"/conf/config.properties");
         }else{
+
             return new TrackerConfig("../ComputeMR/source/conf/config.properties");
         }
     }

@@ -18,6 +18,7 @@ public class RedisManager {
     private JedisPool jedisPool;                //非切片连接池
     private ShardedJedis shardedJedis;          //切片额客户端连接
     private ShardedJedisPool shardedJedisPool;  //切片连接池
+    private Pipeline pipeline;
 
     private static Set<HostAndPort> clusterNOdes;
 
@@ -33,9 +34,14 @@ public class RedisManager {
                 clusterNOdes.add(hostAndPort);
             }
             jedisCluster = new JedisCluster(clusterNOdes);
+            pipeline = new Pipeline();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void PipeLineData(){
     }
 
     public JedisCluster getJedisCluster() {
