@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import java.io.IOException;
 
-/**
+/**读取HFile文件
  * Created by zmm on 2017/11/14.
  */
 public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyValue> {
