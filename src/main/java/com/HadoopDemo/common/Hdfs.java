@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,5 +51,24 @@ public class Hdfs implements Serializable{
 
     public void close() throws IOException{
         fileSystem.close();
+    }
+
+    /**
+     * 功能：获取HDFS Hbase文件路径集合
+     * @throws IOException
+     */
+    public List<Path> getPaths(String inputPath) throws IOException {
+        List<Path> list = new ArrayList<Path>();
+        FileStatus[] stats = fileSystem.listStatus(new Path(inputPath));
+        for(FileStatus file : stats){
+            if(file.isDirectory()&&!file.getPath().getName().startsWith(".")){
+                for(FileStatus fileStatus : stats){
+                    Path path = new Path(fileStatus.getPath().getName());
+                    list.add(path);
+                }
+            }
+        }
+        return list;
+
     }
 }
