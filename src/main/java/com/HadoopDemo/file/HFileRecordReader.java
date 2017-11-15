@@ -3,6 +3,7 @@ package com.HadoopDemo.file;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.io.hfile.AbstractHFileReader;
@@ -12,7 +13,7 @@ import org.apache.hadoop.hbase.io.hfile.HFileScanner;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 
 import java.io.IOException;
 
@@ -25,41 +26,62 @@ import java.io.IOException;
 public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyValue> {
 
     private HFile.Reader reader;
+    private int index;
+    private TaskAttemptContext context;
+    private CombineFileSplit fileSplit;
+    private HFileScanner scanner;
+    private int entryCount=0;
+
+    public HFileRecordReader(CombineFileSplit split ,TaskAttemptContext context,int index){
+
+        this.context=context;
+        this.fileSplit=split;
+        this.index=index;
+
+    }
     @Override
     public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
 
-        Configuration job = context.getConfiguration();
-        FileSplit filesplit = (FileSplit) split;
-        Path path = filesplit.getPath();
+        Configuration job = this.context.getConfiguration();
+        Path path = this.fileSplit.getPath(index);
         FileSystem fs = path.getFileSystem(job);
         CacheConfig cacheConf = new CacheConfig(job);
         reader = HFile.createReader(fs,path,cacheConf,job);
+        scanner = reader.getScanner(false,false);
+        scanner.seekTo();
 
     }
 
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
-        return false;
+        entryCount++;
+        return scanner.next();
     }
 
     @Override
     public ImmutableBytesWritable getCurrentKey() throws IOException, InterruptedException {
-        return null;
+        return new ImmutableBytesWritable(CellUtil.cloneRow(scanner.getKeyValue()));
     }
 
     @Override
     public KeyValue getCurrentValue() throws IOException, InterruptedException {
-        HFileScanner scanner = reader.getScanner(false,false);
-        return null;
+
+        return scanner.getKeyValue();
     }
 
     @Override
     public float getProgress() throws IOException, InterruptedException {
+        if(reader!=null){
+            return entryCount/reader.getEntries();
+        }
         return 0;
     }
 
     @Override
     public void close() throws IOException {
 
+        if(reader!=null){
+            reader.close();
+        }
     }
 }
