@@ -69,6 +69,5 @@ public class Hdfs implements Serializable{
             }
         }
         return list;
-
     }
 }

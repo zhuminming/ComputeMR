@@ -25,7 +25,7 @@ public class HBaseTableInputFormat extends TableInputFormat {
         List<InputSplit> newInputSplits = new ArrayList<InputSplit>();
         TableName tName = super.getHTable().getName();
 
-        TrackerConfig config        = (TrackerConfig) SerializeUtil.deSerialize(context.getConfiguration().get(Constant.TRACKER_CONFIG));
+        TrackerConfig config = (TrackerConfig) SerializeUtil.deSerialize(context.getConfiguration().get(Constant.TRACKER_CONFIG));
         int mapNum = config.getMrMaxMapNum();
         long splitSize = config.getMrInputSplitSize();
 
