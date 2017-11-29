@@ -6,7 +6,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.io.hfile.AbstractHFileReader;
 import org.apache.hadoop.hbase.io.hfile.CacheConfig;
 import org.apache.hadoop.hbase.io.hfile.HFile;
 import org.apache.hadoop.hbase.io.hfile.HFileScanner;
@@ -55,6 +54,7 @@ public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyVa
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
         entryCount++;
+        if (entryCount == 1) return true;
         return scanner.next();
     }
 
@@ -65,7 +65,6 @@ public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyVa
 
     @Override
     public KeyValue getCurrentValue() throws IOException, InterruptedException {
-
         return scanner.getKeyValue();
     }
 
@@ -79,7 +78,6 @@ public class HFileRecordReader extends RecordReader<ImmutableBytesWritable,KeyVa
 
     @Override
     public void close() throws IOException {
-
         if(reader!=null){
             reader.close();
         }
