@@ -47,31 +47,30 @@ public class CombineSmallFileRecordReader extends RecordReader<Object, Text>{
 	@Override
 	public boolean nextKeyValue() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		return false;
+		return this.reader.nextKeyValue();
 	}
 
 	@Override
 	public Object getCurrentKey() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		return null;
+		return this.reader.getCurrentKey();
 	}
 
 	@Override
 	public Text getCurrentValue() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		return null;
+		return this.reader.getCurrentValue();
 	}
 
 	@Override
 	public float getProgress() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.reader.getProgress();
 	}
 
 	@Override
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
-		
+		this.reader.close();
 	}
-
 }
