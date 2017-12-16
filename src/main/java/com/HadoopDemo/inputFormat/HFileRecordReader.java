@@ -1,4 +1,4 @@
-package com.HadoopDemo.file;
+package com.HadoopDemo.inputFormat;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

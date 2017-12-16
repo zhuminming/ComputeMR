@@ -1,4 +1,4 @@
-package com.HadoopDemo.file;
+package com.HadoopDemo.inputFormat;
 
 import com.HadoopDemo.common.Constant;
 import com.HadoopDemo.common.SerializeUtil;
@@ -23,16 +23,17 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 文件名：HFileInputFormat
+ *
  * 功能：Hbase中的HFile文件合并后再根据配置文件设置的maxsplit大小进行切割和读取
- * 创建人：minming.zhu
- * 创建日期：2017-11-14.
+ * @Author: zhuminming
+ * @create: 2017/12/16 12:52
+ * @GitHubAddress: https://github.com/zhuminming
  */
 public class HFileInputFormat extends CombineFileInputFormat<ImmutableBytesWritable,KeyValue>{
     //读取Hfile文件
     @Override
     public RecordReader<ImmutableBytesWritable, KeyValue> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException {
-        return new CombineFileRecordReader<ImmutableBytesWritable, KeyValue>((CombineFileSplit)split,context,HFileRecordReader.class);
+        return new CombineFileRecordReader<ImmutableBytesWritable, KeyValue>((CombineFileSplit)split,context, HFileRecordReader.class);
     }
 
     //切割文件

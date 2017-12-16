@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import com.HadoopDemo.file.CombineSmallFileInputFormat;
 import com.HadoopDemo.file.HBaseTableInputFormat;
 
 import org.apache.hadoop.conf.Configuration;
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
 	private Integer                              numReduceTasks;            //设置reduce个数
 	private String                               inputPath;                 //设置Mapreduce输入路径
 	private String                               outputPath;                //设置Mapreduce输出路径
-	private Class<? extends InputFormat<?, ?>>   inputFormatClass;          //设置Mapreduce输入文件的切分规则
+	private Class<FileInputFormat> inputFormatClass;          //设置Mapreduce输入文件的切分规则
 	private Configuration                        config;
 	private TrackerConfig                        trackerConfig;             //自定义配置文件
 	private static Scan                          scan;                      //设置scan
@@ -123,7 +122,7 @@ import org.slf4j.LoggerFactory;
 		this.reducerClass=reducerClass;
 		this.numReduceTasks=numReduceTasks;
 		this.outputPath=outputPath;
-		this.inputFormatClass=CombineSmallFileInputFormat.class;
+		this.inputFormatClass=FileInputFormat.class;
 		this.trackerConfig = TrackerConfig.getInstance();
 		this.config = new Configuration();
 		this.config.set("hbase.zookeeper.quorum", this.trackerConfig.getZookeeper());
