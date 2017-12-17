@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.HBaseDemo.common.HbaseClient;
 import com.HadoopDemo.common.Constant;
 import com.HadoopDemo.common.HConnectionPool;
-import com.HadoopDemo.common.MapReduce;
 import com.HadoopDemo.common.SerializeUtil;
 import com.HadoopDemo.common.TrackerConfig;
 
@@ -92,8 +90,6 @@ public class TestMapreduce {
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException{
 		String inputPath = args[0];
 		String outputPath =args[1];
-		MapReduce mr = new MapReduce(true, "TestMapreduce", TestMapreduce.class, TestMapper.class, Text.class, Text.class, null, null, TestReducer.class, null, inputPath, outputPath+"/01");
-		mr.waitForCompletion();
 	}
 
 }

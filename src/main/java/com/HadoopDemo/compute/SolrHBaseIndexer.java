@@ -1,6 +1,5 @@
 package com.HadoopDemo.compute;
 
-import com.HadoopDemo.common.MapReduce;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.Result;
@@ -68,7 +67,5 @@ public class SolrHBaseIndexer{
         scan.setCaching(500); // 设置缓存数据量来提高效率
         scan.setCacheBlocks(false);
 
-        MapReduce mr = MapReduce.getMapReduce(false,"SolrHBaseIndexer",SolrHBaseIndexer.class,SolrHBaseIndexerMapper.class,Text.class,Text.class,null,null,null,null,outputPath,scan);
-        mr.waitForCompletion();
     }
 }

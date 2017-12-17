@@ -42,6 +42,15 @@ public class TrackerConfig  implements Serializable {
      * */
     private List<String> redisCluster = Lists.newArrayList();  //redis集群
 
+     /*
+     * mysql配置
+     * */
+    private String database;
+    private int port;
+    private String username;
+    private String host;
+    private String password;
+
 
     public TrackerConfig(String filepath){
         InputStream input = null;
@@ -61,6 +70,12 @@ public class TrackerConfig  implements Serializable {
             this.zookeeper = properties.getString("hbase.zookeeper.quorum");
             this.poolSize = properties.getInt("hbase.pool.size", 15);	//hbase线程池大小默认为15
             this.hbaseHConnectionNum = properties.getInt("hbase.hconnection.num", 1);
+
+            this.database=properties.getString("mysql.database");
+            this.port=properties.getInt("mysql.port");
+            this.host=properties.getString("mysql.host");
+            this.username=properties.getString("mysql.username");
+            this.password=properties.getString("mysql.password");
 
             String[] nodes =  properties.getString("redis.cluster").split(",");
             for(String node:nodes){
@@ -216,4 +231,44 @@ public class TrackerConfig  implements Serializable {
     public List<String> getRedisCluster() {return redisCluster;}
 
     public void setRedisCluster(List<String> redisCluster) {this.redisCluster = redisCluster;}
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
