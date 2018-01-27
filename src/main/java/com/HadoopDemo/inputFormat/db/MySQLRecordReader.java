@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.db;
 
 import com.HadoopDemo.common.DBConfiguration;
 import org.apache.hadoop.conf.Configuration;

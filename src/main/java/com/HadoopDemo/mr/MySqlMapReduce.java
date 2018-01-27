@@ -1,16 +1,13 @@
 package com.HadoopDemo.mr;
 
-import com.HadoopDemo.common.DBConfiguration;
 import com.HadoopDemo.common.TrackerConfig;
-import com.HadoopDemo.inputFormat.DBInputFormat;
-import org.apache.hadoop.conf.Configuration;
+import com.HadoopDemo.inputFormat.db.DBInputFormat;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.db.DBWritable;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

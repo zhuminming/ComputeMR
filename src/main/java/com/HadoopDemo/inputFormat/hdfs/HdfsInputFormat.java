@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.hdfs;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -18,9 +18,9 @@ import java.io.IOException;
  * @create: 2017-12-2017/12/16 11:48
  * @GitHubAddress: https://github.com/zhuminming
  */
-public class FileInputFormat extends CombineFileInputFormat<Object,Text> {
+public class HdfsInputFormat extends CombineFileInputFormat<Object,Text> {
     @Override
     public RecordReader<Object, Text> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException {
-        return new CombineFileRecordReader<Object, Text>((CombineFileSplit) split ,context,FileRecordReader.class);
+        return new CombineFileRecordReader<Object, Text>((CombineFileSplit) split ,context,HdfsRecordReader.class);
     }
 }

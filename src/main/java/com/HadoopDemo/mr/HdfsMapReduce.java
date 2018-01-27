@@ -17,8 +17,8 @@ import java.util.List;
  * @create: 2017/12/16 18:35
  * @GitHubAddress: https://github.com/zhuminming
  */
-public class FileMapReduce extends AbstractMapReduce {
-    private static final Logger LOG = LoggerFactory.getLogger(FileMapReduce.class);
+public class HdfsMapReduce extends AbstractMapReduce {
+    private static final Logger LOG = LoggerFactory.getLogger(HdfsMapReduce.class);
     private boolean                              isLocal;                   //是否是本地
     private String                               jarname;                   //设置jar名称
     private Class<?>                             jarByClass;                //设置mapreduce所在的类名
@@ -33,7 +33,7 @@ public class FileMapReduce extends AbstractMapReduce {
     private String                               outputPath;                //设置Mapreduce输出路径
     private Class<FileInputFormat>               inputFormatClass;          //设置Mapreduce输入文件的切分规则
 
-    public FileMapReduce(boolean isLocal,String jarname,
+    public HdfsMapReduce(boolean isLocal, String jarname,
                          Class<?> jarByClass,
                          Class<? extends Mapper<?, ?, ?, ?>> mapperClass,
                          Class<?> outputKeyClass,

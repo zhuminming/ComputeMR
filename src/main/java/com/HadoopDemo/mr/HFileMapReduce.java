@@ -3,7 +3,7 @@ package com.HadoopDemo.mr;
 import com.HadoopDemo.common.Hdfs;
 import com.HadoopDemo.common.StringUtil;
 import com.HadoopDemo.common.TrackerConfig;
-import com.HadoopDemo.inputFormat.HFileInputFormat;
+import com.HadoopDemo.inputFormat.hfile.HFileInputFormat;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;

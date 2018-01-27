@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.db;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one

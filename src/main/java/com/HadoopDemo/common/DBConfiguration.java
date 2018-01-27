@@ -18,7 +18,7 @@ package com.HadoopDemo.common;
  * limitations under the License.
  */
 
-import com.HadoopDemo.inputFormat.DBInputFormat;
+import com.HadoopDemo.inputFormat.db.DBInputFormat;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;

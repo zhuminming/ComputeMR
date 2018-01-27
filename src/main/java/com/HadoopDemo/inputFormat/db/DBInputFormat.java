@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.db;
 
 import java.io.DataInput;
 import java.io.DataOutput;

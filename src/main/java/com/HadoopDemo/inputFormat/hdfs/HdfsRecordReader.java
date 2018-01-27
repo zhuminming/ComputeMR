@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -21,13 +21,13 @@ import java.io.IOException;
  * @create: 2017/12/16 11:51
  * @GitHubAddress: https://github.com/zhuminming
  */
-public class FileRecordReader extends RecordReader<Object,Text> {
+public class HdfsRecordReader extends RecordReader<Object,Text> {
     private CombineFileSplit split;
     private TaskAttemptContext context;
     private Integer currentindex;
     private LineRecordReader reader;
 
-    public FileRecordReader(CombineFileSplit split,TaskAttemptContext context,Integer index){
+    public HdfsRecordReader(CombineFileSplit split, TaskAttemptContext context, Integer index){
         this.split=split;
         this.context= context;
         this.currentindex =index;

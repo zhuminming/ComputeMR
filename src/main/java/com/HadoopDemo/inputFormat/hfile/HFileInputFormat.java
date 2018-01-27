@@ -1,4 +1,4 @@
-package com.HadoopDemo.inputFormat;
+package com.HadoopDemo.inputFormat.hfile;
 
 import com.HadoopDemo.common.Constant;
 import com.HadoopDemo.common.SerializeUtil;
