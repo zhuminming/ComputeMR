@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>2.4.1</hadoop.version>
-        <JAVA_HOME>C:\Program Files\Java\jdk1.7.0_79\lib\tools.jar</JAVA_HOME>
+        <JAVA_HOME>C:\Program Files\Java\jdk1.7.0_80\lib\tools.jar</JAVA_HOME>
         <hbase.version>0.98.7-hadoop2</hbase.version>
         <solr.version>4.10.4</solr.version>
         <sl4j-log4j12.version>1.7.7</sl4j-log4j12.version>
@@ -43,6 +43,16 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-nodemanager</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
         <dependency>
@@ -112,6 +122,11 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
             <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
         </dependency>
     </dependencies>
 </project>
