@@ -152,7 +152,7 @@ public class CommonsortImpl {
             int length=arr.length;
             int last = length-1;
             for(int i =0 ; i< length ;i++){
-                generateMaxHeapSore(arr,length-i);
+                generateMaxHeapSort(arr,length-i);
                 int max = arr[0];
                 arr[0]=arr[last-i];
                 arr[last-i]=max;
@@ -165,17 +165,17 @@ public class CommonsortImpl {
         /*
         * 生成大顶堆
         * */
-        private void generateMaxHeapSore(int[] arr,int length){
+        private void generateMaxHeapSort(int[] arr,int length){
             int i=(int) length/2-1;
             for(;i>=0;i--){
-                adjustMaxHeapSore(arr,length,i);
+                adjustMaxHeapSort(arr, length, i);
             }
         }
 
         /*
         * 调整大顶堆
         * */
-        private void adjustMaxHeapSore(int[] arr,int length ,int i){
+        private void adjustMaxHeapSort(int[] arr,int length ,int i){
             int left = getLeft(i);
             int right = getRight(i);
 
@@ -191,7 +191,7 @@ public class CommonsortImpl {
                 arr[i]=arr[max];
                 arr[max]=temp;
                 //被交换的位置以前是大顶堆，现在可能不是大根堆所以需要重新调整使其成为大根堆结构
-                adjustMaxHeapSore(arr,length,max);
+                adjustMaxHeapSort(arr,length,max);
             }
         }
 
