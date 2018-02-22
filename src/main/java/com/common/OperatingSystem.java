@@ -121,7 +121,7 @@ public class OperatingSystem {
 	    public static Map<String, String> runLocalShell(String[] commands) {  
 	        Runtime runtime = Runtime.getRuntime();  
 	  
-	        Map<String, String> map = new HashMap<>();  
+	        Map<String, String> map = new HashMap<String, String>();
 	        StringBuilder stringBuffer;  
 	  
 	        BufferedReader reader;  
