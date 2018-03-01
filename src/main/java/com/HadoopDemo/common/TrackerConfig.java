@@ -37,6 +37,7 @@ public class TrackerConfig  implements Serializable {
     private  String zookeeper;         //zookeeper地址
     private  int poolSize;             //hbase线程池大小
 
+
     /*
      * redis集群配置
      * */

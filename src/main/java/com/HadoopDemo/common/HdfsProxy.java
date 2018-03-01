@@ -1,9 +1,12 @@
 package com.HadoopDemo.common;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
@@ -11,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class HdfsProxy {
 	private static Logger LOG = LoggerFactory.getLogger(HdfsProxy.class);
-
+	private FileSystem fileSystem;
 	private String nameservices;    //hdfs集群名
 	private String hdfsAddr;        //namenode的地址(ip:port)
 	
@@ -37,6 +40,12 @@ public class HdfsProxy {
 		configuration.set("dfs.client.failover.proxy.provider." + nameservices, "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
 		configuration.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
 		configuration.set("dfs.replication", "2");
+		try {
+			fileSystem = FileSystem.newInstance(configuration);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return configuration;
 	}
 	
@@ -137,5 +146,40 @@ public class HdfsProxy {
 			}
 		 }
 		return result;
+	}
+
+	/**
+	 * 功能：获取指定路径下所有文件
+	 *
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	public List<Path> getFilePaths(Path path) throws IOException {
+		FileStatus[] status = fileSystem.listStatus(path);
+		List<Path> paths = new ArrayList<Path>();
+		if(status.length==0) return paths;
+		for (FileStatus file : status) {
+			if (file.isDirectory() && !file.getPath().getName().startsWith(".")) {
+				paths.addAll(getFilePaths(file.getPath()));
+			}
+			if (file.isFile() && !file.getPath().getName().startsWith(".")) {
+				paths.add(file.getPath());
+			}
+		}
+
+		return paths;
+	}
+	/**
+	 * 功能：关闭文件系统
+	 */
+	public void close() {
+		if (fileSystem != null) {
+			try {
+				fileSystem.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

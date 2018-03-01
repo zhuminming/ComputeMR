@@ -68,4 +68,19 @@ public class MRConfig {
         }
         return totalSize;
     }
+
+    //设置连接mysql数据库的属性配置，用于MR以Mysql为数据源
+    public static Configuration getConfigValueByBD(boolean isLocal,TrackerConfig trackerConfig, String inputPath) throws IOException {
+
+        Configuration config = createConfiguration(isLocal, trackerConfig, inputPath);
+        String driverClass = "com.mysql.jdbc.Driver";
+        String dbUrl = "jdbc:mysql://" + trackerConfig.getHost() + "/"+ trackerConfig.getDatabase();
+        DBConfiguration.configureDB(config, driverClass, dbUrl,
+                trackerConfig.getUsername(), trackerConfig.getPassword());
+        //只设置一个map和reduce
+        config.setInt(JobContext.NUM_MAPS, 1);
+        config.setInt(JobContext.NUM_REDUCES, 1);
+        return config;
+
+    }
 }

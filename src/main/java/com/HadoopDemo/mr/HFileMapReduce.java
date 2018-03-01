@@ -1,14 +1,12 @@
 package com.HadoopDemo.mr;
 
-import com.HadoopDemo.common.Hdfs;
-import com.HadoopDemo.common.StringUtil;
-import com.HadoopDemo.common.TrackerConfig;
+import com.HadoopDemo.common.*;
 import com.HadoopDemo.inputFormat.hfile.HFileInputFormat;
+import com.google.common.collect.Lists;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Partitioner;
-import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.WritableComparator;
+import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.slf4j.Logger;
@@ -24,129 +22,223 @@ import java.util.List;
  * @GitHubAddress: https://github.com/zhuminming
  */
 public class HFileMapReduce extends AbstractMapReduce{
-    private static final Logger LOG = LoggerFactory.getLogger(HFileMapReduce.class);
-    private boolean                              isLocal;                   //是否是本地
-    private String                               jarname;                   //设置jar名称
-    private Class<?>                             jarByClass;                //设置mapreduce所在的类名
-    private Class<? extends Mapper<?, ?, ?, ?>>  mapperClass;               //设置map类名
-    private Class<?>                             outputKeyClass;            //设置map输出key值类型
-    private Class<?>                             outputValuesClass;         //设置map输出value值类型
-    private Class<? extends Partitioner<?, ?>>   partitionerClass;          //设置partitioner类名
-    private Class<? extends Reducer<?, ?, ?, ?>> combinerClass;             //设置combiner类名
-    private Class<? extends Reducer<?, ?, ?, ?>> reducerClass;              //设置redicer类名
-    private Integer                              numReduceTasks;            //设置reduce个数
-    private String                               inputPath;                 //设置Mapreduce输入路径
-    private String                               outputPath;                //设置Mapreduce输出路径
-    private Class<HFileInputFormat> inputFormatClass;          //设置Mapreduce输入文件的切分规则
-    public HFileMapReduce(boolean isLocal,
-                          String jarname,
-                          Class<?> jarByClass,
+    private final Logger LOG = LoggerFactory.getLogger(HFileMapReduce.class);
+    private  Boolean           isLocal; // 是否本地运行
+
+    public HFileMapReduce(Boolean isLocal, Class<?> jarByClass,
                           Class<? extends Mapper<?, ?, ?, ?>> mapperClass,
-                          Class<?> outputKeyClass,
-                          Class<?> outputValuesClass,
-                          Class<? extends Partitioner<?, ?>> partitionerClass,
-                          Class<? extends Reducer<?, ?, ?, ?>> combinerClass,
-                          Class<? extends Reducer<?, ?, ?, ?>> reducerClass,
-                          Integer numReduceTasks,
-                          String inputPath,
-                          String outputPath) throws IOException {
+                          Class<? extends WritableComparable<?>> outputKeyClass,
+                          Class<?> outputValueClass,
+                          TrackerConfig trackerconfig, String inputPath, String outputPath)
+            throws IOException {
         this.isLocal = isLocal;
-        this.jarname = jarname;
         this.jarByClass = jarByClass;
-        this.mapperClass= mapperClass;
-        this.outputKeyClass=outputKeyClass;
-        this.outputValuesClass=outputValuesClass;
-        this.partitionerClass=partitionerClass;
-        this.combinerClass=combinerClass;
-        this.reducerClass=reducerClass;
-        this.numReduceTasks=numReduceTasks;
-        this.inputPath=inputPath;
-        this.outputPath=outputPath;
-        this.inputFormatClass=HFileInputFormat.class;
-        this.trackerConfig = TrackerConfig.getInstance();
-        this.config = com.HadoopDemo.common.MRConfig.createConfiguration(isLocal, this.trackerConfig, this.inputPath);
+        this.mapperClass = mapperClass;
+        this.outputKeyClass = outputKeyClass;
+        this.outputValueClass = outputValueClass;
+        this.inputPath = inputPath;
+        this.inputFormatClass = (Class<? extends InputFormat>) HFileInputFormat.class;
+        this.outputPath = outputPath;
+        this.trackerConfig = trackerconfig;
+        this.config = com.HadoopDemo.common.MRConfig.createConfiguration(isLocal, this.trackerConfig, inputPath);
     }
 
     @Override
-    public boolean waitForCompletion() throws IOException, ClassNotFoundException, InterruptedException {
+    public boolean waitForCompletion() throws ClassNotFoundException,
+            IOException, InterruptedException {
         return buildJob().waitForCompletion(true);
     }
 
+
     @Override
     protected Job buildJob() throws IOException {
-        Job job = Job.getInstance(this.config,this.jarname);
-        //设置mapreduce所在的类名
+        Job job = null;
+        if(this.jarname !=null){
+            job=Job.getInstance(this.config, this.jarname);
+        }else {
+            job=Job.getInstance(this.config, this.jarByClass.getSimpleName());
+        }
         job.setJarByClass(this.jarByClass);
-        //map类型
+
+        // map
         job.setMapperClass(this.mapperClass);
-        //map输出key值类型
+
+        // reduce
         job.setOutputKeyClass(this.outputKeyClass);
-        //map输出value值类型
-        job.setOutputValueClass(this.outputValuesClass);
-        //partitioner类名
-        if(this.partitionerClass!=null){
+        job.setOutputValueClass(this.outputValueClass);
+
+        // partition
+        if (this.partitionerClass != null) {
             job.setPartitionerClass(this.partitionerClass);
         }
-        //combiner类名
-        if(this.combinerClass!=null){
+        // combine
+        if (this.combinerClass != null) {
             job.setCombinerClass(this.combinerClass);
         }
-        //reducer类名
-        if(this.reducerClass!=null){
+        // reduce
+        if (this.reducerClass != null) {
             job.setReducerClass(this.reducerClass);
-            if(this.numReduceTasks!=null){
+            // reduce任务数
+            if (this.numReduceTasks != null) {
                 job.setNumReduceTasks(this.numReduceTasks);
             }
         }
+        // groupingComparator
+        if (this.groupingComparatorClass != null) {
+            job.setGroupingComparatorClass(this.groupingComparatorClass);
+        }
 
-        //mapreduce输入
+        // mapOutputKeyClass
+        if (this.mapOutputKeyClass != null) {
+            job.setMapOutputKeyClass(this.mapOutputKeyClass);
+        }
+
+        // mapOutputValueClass
+        if (this.mapOutputValueClass != null) {
+            job.setMapOutputValueClass(this.mapOutputValueClass);
+        }
+
+        // OutputFormatClass
+        if (this.outputFormatClass != null) {
+            job.setOutputFormatClass(this.outputFormatClass);
+        }
+
+        // 输入
         job.setInputFormatClass(this.inputFormatClass);
-        setInputPath(job,this.inputPath);
-        //mapreduce输出
+        setInputPath(job, this.inputPath);
+        // 输出
         FileOutputFormat.setOutputPath(job, new Path(this.outputPath));
 
         return job;
     }
-    /**
-     * 功能：设置mapreduce输入路径
-     * @throws IOException
-     */
-    public void setInputPath(Job job,String pathString) throws IOException{
+
+    private void setInputPath(Job job, String inputPath) throws IOException {
         boolean hasInput = false;
-        if(isLocal){
-            for(String pathStr : pathString.split(StringUtil.VAL_SPLIT)){
-                if(new File(pathStr).exists()){
-                    Path path = new Path(pathStr);
-                    FileInputFormat.addInputPath(job, path);
-                    hasInput = true;
-                }else{
-                    LOG.warn("path " + pathStr + "is not exit !");
+        if (this.isLocal) {
+            for (String pathStr : inputPath.split(",")) {
+                if (new File(pathStr).exists()) {
+                    List<Path> ps = scanDir(pathStr);
+                    for (Path p : ps) {
+                        FileInputFormat.addInputPath(job, p);
+                        hasInput = true;
+                    }
+                } else {
+                    LOG.warn("Path " + pathStr + " is not exist !");
                 }
             }
-        }else{
-            Hdfs hdfs = null;
-            try{
-                hdfs = new Hdfs(this.trackerConfig);
-                for(String pathStr : pathString.split(StringUtil.VAL_SPLIT)){
+        } else {
+            HdfsProxy hdfs = null;
+            try {
+                hdfs = new HdfsProxy(this.trackerConfig.getHdfsClusterName(),this.trackerConfig.getHdfsAddr());
+                for (String pathStr : inputPath.split(",")) {
                     Path path = new Path(pathStr);
-                    if(hdfs.isFileExist(path)){
-                        List<Path> list = hdfs.getFileList(path);
-                        for(Path pt : list){
-                            FileInputFormat.addInputPath(job,pt);
+                    if (hdfs.isFileExist(path)) {
+                        List<Path> ps = hdfs.getFilePaths(path);
+                        for (Path p : ps) {
+                            FileInputFormat.addInputPath(job, p);
                             hasInput = true;
                         }
-                    }else{
-                        LOG.warn("path " + pathStr + "is not exit !");
+                    } else {
+                        LOG.warn("Path " + pathStr + " is not exist !");
                     }
                 }
-            }finally {
-                if(hdfs!=null){
+            } finally {
+                if (hdfs != null) {
                     hdfs.close();
                 }
             }
-            if (!hasInput) {
-                throw new IOException("Set input path failed !");
+        }
+        if (!hasInput) {
+            throw new IOException("Set input path failed !");
+        }
+    }
+    /**
+     * 获取本地指定目录下的所有文件
+     * @param path
+     * @return
+     */
+    private static List<Path> scanDir(String path) {
+        File filePath = new File(path);
+        File[] files = filePath.listFiles();
+        List<Path> pathsList = Lists.newArrayList();
+        for (File file : files) {
+            if (file.isDirectory() && !file.getPath().contains(".")) {
+                pathsList.addAll(scanDir(file.getAbsolutePath()));
+            } else if (file.isFile() && !file.getPath().contains(".")) {
+                pathsList.add(new Path(file.getAbsolutePath()));
             }
         }
+
+        return pathsList;
+    }
+
+    public HFileMapReduce setIsCompressedOutput(boolean compressed) {
+        if (!compressed) {
+            this.config.setBoolean(
+                    "mapreduce.output.fileoutputformat.compress", false);
+        }
+        return this;
+    }
+
+    public HFileMapReduce setParameter(String name, String value) {
+        this.config.set(name, value);
+        return this;
+    }
+
+    public HFileMapReduce setPartitionerClass(
+            Class<? extends Partitioner<?, ?>> partitionerClass) {
+        this.partitionerClass = partitionerClass;
+        return this;
+    }
+
+    public HFileMapReduce setCombinerClass(
+            Class<? extends Reducer<?, ?, ?, ?>> combinerClass) {
+        this.combinerClass = combinerClass;
+        return this;
+    }
+
+    public HFileMapReduce setReducerClass(
+            Class<? extends Reducer<?, ?, ?, ?>> reducerClass) {
+        this.reducerClass = reducerClass;
+        return this;
+    }
+
+    public HFileMapReduce setNumReduceTasks(Integer numReduceTasks) {
+        this.numReduceTasks = numReduceTasks;
+        return this;
+    }
+
+    public HFileMapReduce setInputFormatClass(
+            Class<? extends InputFormat> inputFormatClass) {
+        this.inputFormatClass = inputFormatClass;
+        return this;
+    }
+
+    public HFileMapReduce setGroupingComparatorClass(
+            Class<? extends WritableComparator> groupingComparatorClass) {
+        this.groupingComparatorClass = groupingComparatorClass;
+        return this;
+    }
+
+    public HFileMapReduce setMapOutputKeyClass(
+            Class<? extends WritableComparable<?>> mapOutputKeyClass) {
+        this.mapOutputKeyClass = mapOutputKeyClass;
+        return this;
+    }
+
+    public HFileMapReduce setMapOutputValueClass(
+            Class<?> mapOutputValueClass) {
+        this.mapOutputValueClass = mapOutputValueClass;
+        return this;
+    }
+
+    public HFileMapReduce setJarName(String jarName){
+        this.jarname = jarName;
+        return this;
+    }
+
+    public HFileMapReduce setOutputFormatClass(Class<? extends OutputFormat> outputFormatClass){
+        this.outputFormatClass = outputFormatClass;
+        return this;
     }
 }

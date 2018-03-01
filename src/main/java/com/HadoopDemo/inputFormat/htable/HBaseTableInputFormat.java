@@ -24,7 +24,7 @@ import java.util.List;
  * @create: 2017/12/16 16:27
  * @GitHubAddress: https://github.com/zhuminming
  */
-public class RegionInputFormat extends TableInputFormat {
+public class HBaseTableInputFormat extends TableInputFormat {
     @Override
     public List<InputSplit> getSplits(JobContext context) throws IOException{
 
