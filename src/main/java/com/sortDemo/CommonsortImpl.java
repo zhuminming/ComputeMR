@@ -148,7 +148,6 @@ public class CommonsortImpl {
     class HeapSort{
 
         public void heapSort(int[] arr){
-            int middle=(int) arr.length/2-1;
             int length=arr.length;
             int last = length-1;
             for(int i =0 ; i< length ;i++){
